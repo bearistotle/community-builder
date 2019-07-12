@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-2"></div>
+      <div class="col-sm-8">
+        <nav th:replace="fragments :: nav"></nav>
+        <h1 th:text="${title}">You Forgot to Pass In a Title Dummy!</h1>
+        <br />
+        <ul th:if="${events}">
+            <li th:for="event : ${events}" th:text="${event.name}"></li>
+        </ul>
+        <h3 th:unless="${events}">No events to display. Sad. Perhaps you should get a life...</h3>
+      </div>
+    <div class="col-sm-2"></div>
+  </div>
+</div>
+
+</body>
+</html>
+

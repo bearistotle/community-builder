@@ -1,16 +1,16 @@
 package dev.bearistotle.communitybuilder.models;
 
 
-import com.sun.istack.internal.NotNull;
 import org.hibernate.validator.constraints.Email;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
+
+//TODO: Check all relationships (both sides) for correct type and correct set up
 
 @Entity
 @Transactional
@@ -32,23 +32,31 @@ public class User {
     private String passwordHash;
     //Room Number?
     //Calendar?
+    //Activities?
+    //TODO: fix column naming problem
     @ManyToMany
-    private List<Activity> activities;
+    @JoinTable(
+            name="user_event",
+            joinColumns = @JoinColumn(name="event_id"),
+            inverseJoinColumns = @JoinColumn(name="user_id")
+    )
+    private List<Event> events;
 
     public User(String username, String email, String passwordHash){
         this.username = username;
         this.email = email;
         this.passwordHash = passwordHash;
+        this.events = new ArrayList<>();
     }
 
     public User(){}
 
-    public void addActivity(Activity activity){
-        this.activities.add(activity);
+    public void addEvent(Event event){
+        this.events.add(event);
     }
 
-    public void removeActivity(Activity activity){
-        this.activities.remove(activity);
+    public void removeEvent(Event event){
+        this.events.remove(event);
     }
 
     public String getUsername() {
