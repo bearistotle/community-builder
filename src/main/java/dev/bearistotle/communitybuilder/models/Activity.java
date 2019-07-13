@@ -9,11 +9,13 @@ import java.util.List;
 
 @Entity
 @Transactional
+@Table(name = "Activity")
 public class Activity {
 
     @Id
     @GeneratedValue
-    private int id;
+    @Column(name = "id")
+    private int activityId;
 
     @NotNull
     @Size(min=3,max=30,message="Activity name must be between 3 and 30 characters.")
@@ -24,9 +26,9 @@ public class Activity {
     @Size(min=10,max=500,message="Activity description must be between 10 and 500 characters.")
     private String description;
 
-    @OneToMany
-    @JoinColumn(name="user_id")
-    private List<User> users = new ArrayList<>();
+    @ManyToMany(mappedBy = "activities", cascade = { CascadeType.PERSIST,CascadeType.MERGE })
+    private List<User> users;
+
 
     @OneToMany
     @JoinColumn(name="activity_id")
@@ -52,8 +54,8 @@ public class Activity {
 
     public Activity(){}
 
-    public int getId() {
-        return id;
+    public int getActivityId() {
+        return activityId;
     }
 
     public String getName() {

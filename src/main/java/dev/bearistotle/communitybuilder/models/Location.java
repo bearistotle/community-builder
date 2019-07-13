@@ -8,11 +8,13 @@ import java.util.List;
 
 @Entity
 @Transactional
+@Table(name = "Location")
 public class Location {
 
     @Id
     @GeneratedValue
-    private int id;
+    @Column(name = "id")
+    private int locationId;
 
     @NotNull
     @Size(min=3,max=30,message="Location names must be between 3 and 30 characters.")
@@ -21,7 +23,7 @@ public class Location {
     private int maxCapacity;
 
     @OneToMany
-    @JoinColumn(name="event_id")
+    @JoinColumn(name="location_id")
     private List<Event> events;
 
     public Location(String name, int maxCapacity){
@@ -30,8 +32,8 @@ public class Location {
     }
     public Location(){}
 
-    public int getId(){
-        return id;
+    public int getLocationId(){
+        return locationId;
     }
 
     public String getName() {

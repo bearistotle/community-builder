@@ -31,11 +31,13 @@ import java.util.List;
  */
 @Entity
 @Transactional
+@Table(name = "Event")
 public class Event {
 
     @Id
     @GeneratedValue
-    private int id;
+    @Column(name = "id")
+    private int eventId;
 
     @NotNull
     @Size(min=3, max=25, message="Event names must be between 3 and 25 characters.")
@@ -47,7 +49,7 @@ public class Event {
 
     @NotNull
     @DateTimeFormat
-    private LocalDateTime beginning;
+    private LocalDateTime start;
 
     @NotNull
     @DateTimeFormat
@@ -64,12 +66,12 @@ public class Event {
     /** numParticipants should be a HashMap with two entries, "min=x" and "max=y", for some Integers x and y. */
     private HashMap<String, Integer> numParticipants;
 
-    @ManyToMany(mappedBy="events")
+    @ManyToMany(mappedBy = "events", cascade = { CascadeType.PERSIST,CascadeType.MERGE })
     private List<User> users;
 
     public Event(String name,
                  String description,
-                 LocalDateTime beginning,
+                 LocalDateTime start,
                  LocalDateTime end,
                  Location location,
                  Activity activity,
@@ -77,7 +79,7 @@ public class Event {
                  List<User> users){
         this.name = name;
         this.description = description;
-        this.beginning = beginning;
+        this.start = start;
         this.end = end;
         this.location = location;
         this.activity = activity;
@@ -87,13 +89,13 @@ public class Event {
 
     public Event(String name,
                  String description,
-                 LocalDateTime beginning,
+                 LocalDateTime start,
                  LocalDateTime end,
                  Location location,
                  Activity activity){
         this.name = name;
         this.description = description;
-        this.beginning = beginning;
+        this.start = start;
         this.end = end;
         this.location = location;
         this.activity = activity;
@@ -103,8 +105,8 @@ public class Event {
 
     public Event(){}
 
-    public int getId() {
-        return id;
+    public int getEventId() {
+        return eventId;
     }
 
     public String getName() {
@@ -142,16 +144,17 @@ public class Event {
     public List<User> getUsers(){
         return users;
     }
+
     public void addUser(User user) {
         this.users.add(user);
     }
 
-    public LocalDateTime getBeginning() {
-        return beginning;
+    public LocalDateTime getStart() {
+        return start;
     }
 
-    public void setBeginning(LocalDateTime beginning) {
-        this.beginning = beginning;
+    public void setStart(LocalDateTime start) {
+        this.start = start;
     }
 
     public LocalDateTime getEnd() {

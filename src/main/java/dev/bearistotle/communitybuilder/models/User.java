@@ -14,11 +14,13 @@ import java.util.List;
 
 @Entity
 @Transactional
+@Table(name = "User")
 public class User {
 
     @Id
     @GeneratedValue
-    private int id;
+    @Column(name = "id")
+    private int userId;
 
     @NotNull
     @Size(min=5,max=25,message="Username must be 5-25 characters long.")
@@ -32,24 +34,40 @@ public class User {
     private String passwordHash;
     //Room Number?
     //Calendar?
-    //Activities?
-    //TODO: fix column naming problem
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE })
     @JoinTable(
-            name="user_event",
-            joinColumns = @JoinColumn(name="event_id"),
-            inverseJoinColumns = @JoinColumn(name="user_id")
+            name = "user_event",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "event_id") }
     )
     private List<Event> events;
+
+    @ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE })
+    @JoinTable(
+            name = "user_activity",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "activity_id") }
+    )
+    private List<Activity> activities;
+
 
     public User(String username, String email, String passwordHash){
         this.username = username;
         this.email = email;
         this.passwordHash = passwordHash;
         this.events = new ArrayList<>();
+        this.activities = new ArrayList<>();
     }
 
     public User(){}
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
 
     public void addEvent(Event event){
         this.events.add(event);
@@ -81,5 +99,13 @@ public class User {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public List<Activity> getActivities() {
+        return activities;
+    }
+
+    public void addActivity(Activity activity) {
+        this.activities.add(activity);
     }
 }
