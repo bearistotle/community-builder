@@ -31,10 +31,10 @@ public class User {
     private String email;
 
     @NotNull
-    private String passwordHash;
+    private String pwHash;
     //Room Number?
     //Calendar?
-    @ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE })
+    @ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_event",
             joinColumns = { @JoinColumn(name = "user_id") },
@@ -42,7 +42,7 @@ public class User {
     )
     private List<Event> events;
 
-    @ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE })
+    @ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_activity",
             joinColumns = { @JoinColumn(name = "user_id") },
@@ -51,10 +51,10 @@ public class User {
     private List<Activity> activities;
 
 
-    public User(String username, String email, String passwordHash){
+    public User(String username, String email, String pwHash){
         this.username = username;
         this.email = email;
-        this.passwordHash = passwordHash;
+        this.pwHash = pwHash;
         this.events = new ArrayList<>();
         this.activities = new ArrayList<>();
     }
@@ -93,12 +93,12 @@ public class User {
         this.email = email;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPwHash() {
+        return pwHash;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPwHash(String pwHash) {
+        this.pwHash = pwHash;
     }
 
     public List<Activity> getActivities() {
@@ -108,4 +108,6 @@ public class User {
     public void addActivity(Activity activity) {
         this.activities.add(activity);
     }
+
+    public void removeActivity(Activity activity){ this.activities.remove(activity); }
 }

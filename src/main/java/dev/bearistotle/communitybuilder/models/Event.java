@@ -66,7 +66,7 @@ public class Event {
     /** numParticipants should be a HashMap with two entries, "min=x" and "max=y", for some Integers x and y. */
     private HashMap<String, Integer> numParticipants;
 
-    @ManyToMany(mappedBy = "events", cascade = { CascadeType.PERSIST,CascadeType.MERGE })
+    @ManyToMany(mappedBy = "events", cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
     private List<User> users;
 
     public Event(String name,
@@ -148,6 +148,8 @@ public class Event {
     public void addUser(User user) {
         this.users.add(user);
     }
+
+    public void removeUser(User user){ this.users.remove(user); }
 
     public LocalDateTime getStart() {
         return start;

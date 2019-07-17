@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <nav th:replace="fragments :: nav"></nav>
+      <h1 th:text="${title}">You Forgot to Pass In a Title Dummy!</h1>
+      <br />
+      <form th:object="${user}" action="" method="post">
+        <!--TODO; fix issue w/ form below; validate it in the user controller-->
+        <div class="form-group">
+          <label th:for="username">Username</label>
+          <input th:field="*{username}" type="text" />
+        </div>
+        <div class="form-group">
+          <label th:for="email">Email</label>
+          <input th:field="*{email}" type="email" />
+        </div>
+        <div class="form-group">
+          <label th:for="pwHash">Password</label>
+          <input th:field="*{pwHash}" type="password" />
+        </div>
+        <div class="form-group">
+          <label for="verify">Verify Password</label>
+          <input type="password" name="verify" id="verify" />
+        </div>
+        <input type="submit" class="btn btn-info" value="Register" />
+      </form>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+</div>
+<div th:replace="fragments :: bs-scripts"></div>
+</body>
+</html>
+
+
+

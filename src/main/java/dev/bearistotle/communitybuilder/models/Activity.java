@@ -26,11 +26,11 @@ public class Activity {
     @Size(min=10,max=500,message="Activity description must be between 10 and 500 characters.")
     private String description;
 
-    @ManyToMany(mappedBy = "activities", cascade = { CascadeType.PERSIST,CascadeType.MERGE })
+    @ManyToMany(mappedBy = "activities", cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
     private List<User> users;
 
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="activity_id")
     private List<Event> events = new ArrayList<>();
 
@@ -78,15 +78,19 @@ public class Activity {
         return users;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void addUser(User user) {
+        this.users.add(user);
     }
+
+    public void removeUser(User user){ this.users.remove(user); }
 
     public List<Event> getEvents() {
         return events;
     }
 
-    public void setEvents(List<Event> events) {
-        this.events = events;
+    public void addEvent(Event event) {
+        this.events.add(event);
     }
+
+    public void removeEvent(Event event){ this.events.remove(event); }
 }

@@ -22,7 +22,7 @@ public class Location {
 
     private int maxCapacity;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name="location_id")
     private List<Event> events;
 
