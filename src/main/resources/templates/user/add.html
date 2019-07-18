@@ -10,23 +10,29 @@
       <h1 th:text="${title}">You Forgot to Pass In a Title Dummy!</h1>
       <br />
       <form th:object="${user}" action="" method="post">
-        <!--TODO; fix issue w/ form below; validate it in the user controller-->
+        <!--TODO; validate form in the user controller; clean up appearance w/ bootstrap-->
         <div class="form-group">
           <label th:for="username">Username</label>
           <input th:field="*{username}" type="text" />
         </div>
+        <span th:errors="*{username}" class="error"></span>
+
         <div class="form-group">
           <label th:for="email">Email</label>
           <input th:field="*{email}" type="email" />
         </div>
+        <span th:errors="*{email}" class="error"></span>
+
         <div class="form-group">
           <label th:for="pwHash">Password</label>
           <input th:field="*{pwHash}" type="password" />
         </div>
+        <span th:errors="*{pwHash}" class="error"></span>
         <div class="form-group">
           <label for="verify">Verify Password</label>
           <input type="password" name="verify" id="verify" />
         </div>
+        <span th:text="${verifyError}" class="error"></span>
         <input type="submit" class="btn btn-info" value="Register" />
       </form>
     </div>
