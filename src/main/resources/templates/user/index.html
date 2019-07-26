@@ -7,17 +7,22 @@
     <div class="col-sm-2"></div>
     <div class="col-sm-8">
       <nav th:replace="fragments :: nav"></nav>
+      <br />
       <h1 th:text="${title}">You Forgot to Pass In a Title Dummy!</h1>
       <br />
       <ul th:unless="${#lists.isEmpty(users)}">
-        <li th:each="user : ${users}" th:text="${user.name}"></li>
+        <li th:each="user : ${users}" th:text="${user.username}"></li>
       </ul>
       <blockquote class="blockquote" th:if="${#lists.isEmpty(users)}">
         <p class="mb-0">For without friends no one would choose to live, though he had all other goods . . .</p>
         <footer class="blockquote-footer">Aristotle, Book VIII of <cite title="Source Title">Nicomachean Ethics</cite></footer>
       </blockquote>
+      <div class="container">
+        <a class="btn btn-info" href="/user/add">Add User</a>
+      </div>
     </div>
-    <a class="btn btn-info" href="/user/add">Add User</a>
+
+
     <div class="col-sm-2"></div>
   </div>
 </div>

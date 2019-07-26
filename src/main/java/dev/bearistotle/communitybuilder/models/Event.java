@@ -49,7 +49,7 @@ public class Event {
 
     @NotNull
     @DateTimeFormat
-    private LocalDateTime start;
+    private LocalDateTime beginning;
 
     @NotNull
     @DateTimeFormat
@@ -71,7 +71,7 @@ public class Event {
 
     public Event(String name,
                  String description,
-                 LocalDateTime start,
+                 LocalDateTime beginning,
                  LocalDateTime end,
                  Location location,
                  Activity activity,
@@ -79,7 +79,7 @@ public class Event {
                  List<User> users){
         this.name = name;
         this.description = description;
-        this.start = start;
+        this.beginning = beginning;
         this.end = end;
         this.location = location;
         this.activity = activity;
@@ -89,13 +89,13 @@ public class Event {
 
     public Event(String name,
                  String description,
-                 LocalDateTime start,
+                 LocalDateTime beginning,
                  LocalDateTime end,
                  Location location,
                  Activity activity){
         this.name = name;
         this.description = description;
-        this.start = start;
+        this.beginning = beginning;
         this.end = end;
         this.location = location;
         this.activity = activity;
@@ -151,12 +151,12 @@ public class Event {
 
     public void removeUser(User user){ this.users.remove(user); }
 
-    public LocalDateTime getStart() {
-        return start;
+    public LocalDateTime getBeginning() {
+        return beginning;
     }
 
-    public void setStart(LocalDateTime start) {
-        this.start = start;
+    public void setBeginning(LocalDateTime beginning) {
+        this.beginning = beginning;
     }
 
     public LocalDateTime getEnd() {

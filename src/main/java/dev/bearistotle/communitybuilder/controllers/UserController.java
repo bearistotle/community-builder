@@ -22,8 +22,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.validation.Valid;
 
-
-//TODO; test ability to save user; test password hashing; fix issue w/ pwHash being null
 @Controller
 @RequestMapping(value = "user")
 public class UserController {

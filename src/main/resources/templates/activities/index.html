@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <nav th:replace="fragments :: nav"></nav>
+      <br />
+      <h1 th:text="${title}">You Forgot to Pass In a Title Dummy!</h1>
+      <br />
+      <ul th:unless="${#lists.isEmpty(activities)}">
+        <li th:each="activity : ${activities}" th:text="${activity.name}"></li>
+      </ul>
+      <p th:if="${#lists.isEmpty(activities)}">Really? You can't think of <emph>anything</emph> you'd like to do??</p>
+      <br />
+      <a class="btn btn-info" href="/activities/add">Add Activity</a>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+</div>
+<div th:replace="fragments :: bs-scripts"></div>
+</body>
+</html>
+
