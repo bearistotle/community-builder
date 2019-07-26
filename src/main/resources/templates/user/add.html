@@ -24,15 +24,17 @@
         <span th:errors="*{email}" class="error"></span>
 
         <div class="form-group">
-          <label th:for="pwHash">Password</label>
-          <input th:field="*{pwHash}" type="password" />
+          <label for="password">Password</label>
+          <input name="password" id="password" type="password" />
         </div>
-        <span th:errors="*{pwHash}" class="error"></span>
+        <span th:text="${passwordError}" class="error"></span>
+
         <div class="form-group">
           <label for="verify">Verify Password</label>
           <input type="password" name="verify" id="verify" />
         </div>
         <span th:text="${verifyError}" class="error"></span>
+
         <input type="submit" class="btn btn-info" value="Register" />
       </form>
     </div>

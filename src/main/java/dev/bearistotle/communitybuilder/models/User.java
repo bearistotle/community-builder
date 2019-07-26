@@ -30,7 +30,6 @@ public class User {
     @Email
     private String email;
 
-    @NotNull
     private String pwHash;
     //Room Number?
     //Calendar?
