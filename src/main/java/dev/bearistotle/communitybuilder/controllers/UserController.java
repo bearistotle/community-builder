@@ -17,10 +17,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.List;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.validation.Valid;
+
 
 @Controller
 @RequestMapping(value = "user")
@@ -110,7 +112,32 @@ public class UserController {
             return "user/add";
         }
 
-        // password hashing (dummy version to get v.0 of the program up and running.Come back and replace with real
+        List<User> users = (List<User>) userDao.findAll();
+        boolean existsByUsername = false;
+        boolean existsByEmail = false;
+
+        for (User user : users){
+            if (user.getUsername().equals(newUser.getUsername())){
+                existsByUsername = true;
+            }
+            if (user.getEmail().equals(newUser.getEmail())) {
+                existsByEmail = true;
+            }
+        }
+        if (existsByUsername == true){
+            model.addAttribute("title", "Add User");
+            model.addAttribute("user", newUser);
+            model.addAttribute("usernameError","That username is taken. Please choose another.");
+            return "user/add";
+        }
+        if (existsByEmail == true){
+            model.addAttribute("title", "Add User");
+            model.addAttribute("user", newUser);
+            model.addAttribute("emailError","That email is taken. Please choose another.");
+            return "user/add";
+        }
+
+        // password hashing (simple version to get v.0 of the program up and running.Come back and replace with real
         // password hashing (Spring Security?)
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
@@ -135,5 +162,14 @@ public class UserController {
         }
 
         return "redirect:";
+    }
+
+    @RequestMapping(value = "login")
+    public String login(Model model){
+        // check if already logged in
+        // display "You are already logged in as user X... Do you want to log out?" with logout button
+        // render login form
+        model.addAttribute("title","Log In");
+        return "user/login";
     }
 }

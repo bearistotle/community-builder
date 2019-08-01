@@ -22,6 +22,7 @@
           <input th:field="*{email}" type="email" class="form-control" />
         </div>
         <span th:errors="*{email}" class="error"></span>
+        <span th:text="${emailError}" class="error"></span>
 
         <div class="form-group">
           <label for="password">Password</label>

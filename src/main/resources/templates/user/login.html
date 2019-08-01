@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <nav th:replace="fragments :: nav"></nav>
+      <br />
+      <h1 th:text="${title}">You Forgot to Pass In a Title Dummy!</h1>
+      <br />
+      <form class="form-control" method="post" action="" >
+
+      </form>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+</div>
+<div th:replace="fragments :: bs-scripts"></div>
+</body>
+</html>
+

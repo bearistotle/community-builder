@@ -10,8 +10,8 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO: Check all relationships (both sides) for correct type and correct set up
-
+// TODO: Check all relationships (both sides) for correct type and correct set up
+// TODO #1: Finish user login and add sessions functionality.
 @Entity
 @Transactional
 @Table(name = "User")
@@ -59,6 +59,33 @@ public class User {
     }
 
     public User(){}
+
+    @Override
+    public boolean equals(Object o){
+        if (o == this){
+            return true;
+        }
+        if (o == null){
+            return false;
+        }
+        if (!(o instanceof User)){
+            return false;
+        }
+        User other = (User) o;
+        return this.getUserId() == other.getUserId() &&
+                this.getUsername().equals(other.getUsername()) &&
+                this.getEmail().equals(other.getEmail());
+    }
+
+    @Override
+    public int hashCode(){
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + userId;
+        result = prime * result + email.hashCode();
+        result = prime * result + username.hashCode();
+        return result;
+    }
 
     public int getUserId() {
         return userId;

@@ -26,4 +26,11 @@ public class ActivityController {
 
         return "activities/index";
     }
+
+    @RequestMapping(value = "add", method = RequestMethod.GET)
+    public String add(Model model){
+        Activity activity = new Activity();
+        // TODO: create add activity form in models and pass it into the view here.
+        return "activities/add";
+    }
 }
