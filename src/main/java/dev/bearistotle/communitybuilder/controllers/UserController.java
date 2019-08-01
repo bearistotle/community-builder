@@ -23,6 +23,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.validation.Valid;
 
+// TODO: Solidify understanding of exception handling and ensure code properly handles all necesssary exceptions.
 
 @Controller
 @RequestMapping(value = "user")

@@ -16,6 +16,7 @@
           <input th:field="*{username}" type="text" class="form-control" />
         </div>
         <span th:errors="*{username}" class="error"></span>
+        <span th:text="${usernameError}" class="error"></span>
 
         <div class="form-group">
           <label th:for="email">Email</label>
