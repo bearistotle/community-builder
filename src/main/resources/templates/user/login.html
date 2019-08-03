@@ -10,8 +10,20 @@
       <br />
       <h1 th:text="${title}">You Forgot to Pass In a Title Dummy!</h1>
       <br />
-      <form class="form-control" method="post" action="" >
-
+      <span th:text="${loginError}" class="error"></span>
+      <form class="form-control" th:object="${user}" method="post" th:action="@{/user/login}" >
+        <div class="form-group">
+          <label th:for="username">Username</label>
+          <input type="text" th:field="*{username}" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" />
+        </div>
+        <div class="form-group">
+          <input type="submit" class="btn btn-info" value="Log in"/>
+        </div>
+        <a th:href="@{/user/add}">Don't have an account? Register here.</a>
       </form>
     </div>
     <div class="col-sm-2"></div>

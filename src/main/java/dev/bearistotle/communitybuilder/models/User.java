@@ -12,6 +12,7 @@ import java.util.List;
 
 // TODO: Check all relationships (both sides) for correct type and correct set up
 // TODO #1: Finish user login and add sessions functionality.
+// TODO: Add password confirm field (and password?) as @Transient fields
 @Entity
 @Transactional
 @Table(name = "User")
@@ -26,7 +27,6 @@ public class User {
     @Size(min=5,max=25,message="Username must be 5-25 characters long.")
     private String username;
 
-    @NotNull
     @Email
     private String email;
 
