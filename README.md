@@ -1,4 +1,4 @@
-# [community-builder](https://github.com/bearistotle/community-builder)
+# Community Builder Overview
 
 ## What It Is
 
