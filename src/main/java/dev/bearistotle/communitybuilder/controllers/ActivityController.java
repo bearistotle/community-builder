@@ -8,9 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
-// TODO: Finish controller for activities pages
+// TODO: Finish controller for activities pages, incl. getting user from session and adding activities to/getting
+//  activities from the logged in user.
 @Controller
 @RequestMapping(value = "activities")
 public class ActivityController {
@@ -19,7 +21,10 @@ public class ActivityController {
     ActivityDao activityDao;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model){
+    public String index(Model model, HttpSession session){
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
         List<Activity> activities = (List<Activity>) activityDao.findAll();
         model.addAttribute("title","Activities");
         model.addAttribute("activities", activities);
@@ -28,7 +33,10 @@ public class ActivityController {
     }
 
     @RequestMapping(value = "add", method = RequestMethod.GET)
-    public String add(Model model){
+    public String add(Model model, HttpSession session){
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
         Activity activity = new Activity();
         // TODO: create add activity form in models and pass it into the view here.
         return "activities/add";

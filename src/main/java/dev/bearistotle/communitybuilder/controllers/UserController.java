@@ -14,18 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.Character;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.List;
-
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 // TODO: Solidify understanding of exception handling and ensure code properly handles all necesssary exceptions.
-
+// TODO #1: Fix userDao/db issue. No longer able to add new users to db.
 @Controller
 @RequestMapping(value = "user")
 public class UserController {
@@ -34,9 +28,12 @@ public class UserController {
     private UserDao userDao;
 
     @RequestMapping(value = "")
-    public String index(Model model){
-
-        model.addAttribute("users", userDao.findAll());
+    public String index(Model model, HttpSession session){
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
         model.addAttribute("title", "Users");
 
         return "user/index";
@@ -56,7 +53,8 @@ public class UserController {
                       @ModelAttribute("newUser") User newUser,
                       Errors errors,
                       @RequestParam String password,
-                      @RequestParam String verify) throws Exception {
+                      @RequestParam String verify,
+                      HttpSession session) throws Exception {
         // validation
         if (errors.hasErrors()){
             model.addAttribute("title", "Add User");
@@ -143,6 +141,7 @@ public class UserController {
         String pwHash = HashUtils.getSaltedHash(password);
         newUser.setPwHash(pwHash);
         userDao.save(newUser);
+        session.setAttribute("user",newUser);
 
         return "redirect:";
     }
@@ -161,12 +160,13 @@ public class UserController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(Model model,
+                        HttpSession session,
                         @ModelAttribute("user") @Valid User user,
                         @RequestParam String password) throws Exception {
         if (userDao.findByUsername(user.getUsername()) != null) {
             User registeredUser = userDao.findByUsername(user.getUsername());
             if (HashUtils.checkPassword(password, registeredUser.getPwHash())) {
-                //create session and redirect
+                session.setAttribute("user", user);
                 return "user/index";
             }
         }

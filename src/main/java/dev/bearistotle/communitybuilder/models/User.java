@@ -7,16 +7,16 @@ import javax.persistence.*;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 // TODO: Check all relationships (both sides) for correct type and correct set up
-// TODO #1: Finish user login and add sessions functionality.
 // TODO: Add password confirm field (and password?) as @Transient fields
 @Entity
 @Transactional
 @Table(name = "User")
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue

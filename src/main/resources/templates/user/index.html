@@ -11,10 +11,9 @@
       <br />
       <h1 th:text="${title}">You Forgot to Pass In a Title Dummy!</h1>
       <br />
-      <ul th:unless="${#lists.isEmpty(users)}">
-        <li th:each="user : ${users}" th:text="${user.username}"></li>
-      </ul>
-      <blockquote class="blockquote" th:if="${#lists.isEmpty(users)}">
+      <h3 th:text="'Welcome, ' + ${user.getUsername()}"></h3>
+      <br />
+      <blockquote class="blockquote">
         <p class="mb-0">For without friends no one would choose to live, though he had all other goods . . .</p>
         <footer class="blockquote-footer">Aristotle, Book VIII of <cite title="Source Title">Nicomachean Ethics</cite></footer>
       </blockquote>
