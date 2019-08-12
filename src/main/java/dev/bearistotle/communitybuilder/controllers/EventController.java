@@ -1,5 +1,6 @@
 package dev.bearistotle.communitybuilder.controllers;
 
+import dev.bearistotle.communitybuilder.models.User;
 import dev.bearistotle.communitybuilder.models.data.EventDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,9 +25,10 @@ public class EventController {
             return "redirect:/user/login";
         }
         // TODO: refactor to get events for the specific user
+        User user = (User) session.getAttribute("user");
         model.addAttribute("events", eventDao.findAll());
         model.addAttribute("title", "Events");
-
+        model.addAttribute("user", user);
         return "events/index";
     }
 

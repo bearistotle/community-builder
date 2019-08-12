@@ -19,7 +19,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 // TODO: Solidify understanding of exception handling and ensure code properly handles all necesssary exceptions.
-// TODO #1: Fix userDao/db issue. No longer able to add new users to db.
 @Controller
 @RequestMapping(value = "user")
 public class UserController {
@@ -177,5 +176,11 @@ public class UserController {
                 " Please check them and try again.");
 
         return "user/login";
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout(Model model, HttpSession session){
+        session.removeAttribute("user");
+        return "redirect:";
     }
 }

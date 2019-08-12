@@ -1,6 +1,7 @@
 package dev.bearistotle.communitybuilder.controllers;
 
 import dev.bearistotle.communitybuilder.models.Activity;
+import dev.bearistotle.communitybuilder.models.User;
 import dev.bearistotle.communitybuilder.models.data.ActivityDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,8 +27,10 @@ public class ActivityController {
             return "redirect:/user/login";
         }
         List<Activity> activities = (List<Activity>) activityDao.findAll();
+        User user = (User) session.getAttribute("user");
         model.addAttribute("title","Activities");
         model.addAttribute("activities", activities);
+        model.addAttribute("user", user);
 
         return "activities/index";
     }
