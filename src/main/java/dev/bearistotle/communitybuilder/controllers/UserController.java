@@ -1,5 +1,6 @@
 package dev.bearistotle.communitybuilder.controllers;
 
+import dev.bearistotle.communitybuilder.models.HashUtils;
 import dev.bearistotle.communitybuilder.models.User;
 import dev.bearistotle.communitybuilder.models.data.UserDao;
 
@@ -13,17 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.Character;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.List;
-
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-
+// TODO: Solidify understanding of exception handling and ensure code properly handles all necesssary exceptions.
 @Controller
 @RequestMapping(value = "user")
 public class UserController {
@@ -32,9 +27,12 @@ public class UserController {
     private UserDao userDao;
 
     @RequestMapping(value = "")
-    public String index(Model model){
-
-        model.addAttribute("users", userDao.findAll());
+    public String index(Model model, HttpSession session){
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
         model.addAttribute("title", "Users");
 
         return "user/index";
@@ -51,10 +49,11 @@ public class UserController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String add(Model model,
-                      @ModelAttribute @Valid User newUser,
+                      @ModelAttribute("newUser") User newUser,
                       Errors errors,
                       @RequestParam String password,
-                      @RequestParam String verify){
+                      @RequestParam String verify,
+                      HttpSession session) throws Exception {
         // validation
         if (errors.hasErrors()){
             model.addAttribute("title", "Add User");
@@ -137,39 +136,51 @@ public class UserController {
             return "user/add";
         }
 
-        // password hashing (simple version to get v.0 of the program up and running.Come back and replace with real
-        // password hashing (Spring Security?)
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        try{
-            KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 512);
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2withHmacSHA512");
 
-            byte[] hashBytes = factory.generateSecret(spec).getEncoded();
-
-            StringBuilder sb = new StringBuilder(512);
-            for (byte b : hashBytes){
-                sb.append(b);
-            }
-            String pwHash;
-            pwHash = sb.toString();
-            newUser.setPwHash(pwHash);
-            userDao.save(newUser);
-
-        }catch (NoSuchAlgorithmException | InvalidKeySpecException e){
-
-        }
+        String pwHash = HashUtils.getSaltedHash(password);
+        newUser.setPwHash(pwHash);
+        userDao.save(newUser);
+        session.setAttribute("user",newUser);
 
         return "redirect:";
     }
 
-    @RequestMapping(value = "login")
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model){
         // check if already logged in
         // display "You are already logged in as user X... Do you want to log out?" with logout button
         // render login form
+        User user = new User();
         model.addAttribute("title","Log In");
+        model.addAttribute("user", user);
+
         return "user/login";
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String login(Model model,
+                        HttpSession session,
+                        @ModelAttribute("user") @Valid User user,
+                        @RequestParam String password) throws Exception {
+        if (userDao.findByUsername(user.getUsername()) != null) {
+            User registeredUser = userDao.findByUsername(user.getUsername());
+            if (HashUtils.checkPassword(password, registeredUser.getPwHash())) {
+                session.setAttribute("user", user);
+                return "user/index";
+            }
+        }
+        // if login fails, return to login screen with error message
+        model.addAttribute("title", "Log In");
+        model.addAttribute("user", user);
+        model.addAttribute("loginError","Username or password did not match any registered user." +
+                " Please check them and try again.");
+
+        return "user/login";
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout(Model model, HttpSession session){
+        session.removeAttribute("user");
+        return "redirect:";
     }
 }

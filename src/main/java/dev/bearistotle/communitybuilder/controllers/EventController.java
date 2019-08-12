@@ -1,10 +1,13 @@
 package dev.bearistotle.communitybuilder.controllers;
 
+import dev.bearistotle.communitybuilder.models.User;
 import dev.bearistotle.communitybuilder.models.data.EventDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpSession;
 
 //TODO: Add equals and toString methods to all classes
 //TODO: Read https://vladmihalcea.com/the-best-way-to-use-the-manytomany-annotation-with-jpa-and-hibernate/ and figure
@@ -17,11 +20,15 @@ public class EventController {
     private EventDao eventDao;
 
     @RequestMapping(value="")
-    public String index(Model model){
-
+    public String index(Model model, HttpSession session){
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
+        // TODO: refactor to get events for the specific user
+        User user = (User) session.getAttribute("user");
         model.addAttribute("events", eventDao.findAll());
         model.addAttribute("title", "Events");
-
+        model.addAttribute("user", user);
         return "events/index";
     }
 

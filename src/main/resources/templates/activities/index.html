@@ -8,7 +8,7 @@
     <div class="col-sm-8">
       <nav th:replace="fragments :: nav"></nav>
       <br />
-      <h1 th:text="${title}">You Forgot to Pass In a Title Dummy!</h1>
+      <h1 th:text="${user.getUsername()} + ': ' + ${title}">You Forgot to Pass In a Title Dummy!</h1>
       <br />
       <ul th:unless="${#lists.isEmpty(activities)}">
         <li th:each="activity : ${activities}" th:text="${activity.name}"></li>
