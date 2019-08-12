@@ -18,7 +18,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-// TODO: Solidify understanding of exception handling and ensure code properly handles all necesssary exceptions.
+// TODO: Solidify understanding of exception handling and ensure code properly handles all necessary exceptions.
 @Controller
 @RequestMapping(value = "user")
 public class UserController {
