@@ -95,11 +95,11 @@ public class User implements Serializable {
         return events;
     }
 
-    public void addEvent(Event event){
+    public void addEvent(@NotNull Event event){
         this.events.add(event);
     }
 
-    public void removeEvent(Event event){
+    public void removeEvent(@NotNull Event event){
         this.events.remove(event);
     }
 
@@ -107,7 +107,7 @@ public class User implements Serializable {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(@NotNull String username) {
         this.username = username;
     }
 
@@ -115,7 +115,7 @@ public class User implements Serializable {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(@NotNull String email) {
         this.email = email;
     }
 
@@ -123,7 +123,7 @@ public class User implements Serializable {
         return pwHash;
     }
 
-    public void setPwHash(String pwHash) {
+    public void setPwHash(@NotNull String pwHash) {
         this.pwHash = pwHash;
     }
 
@@ -131,9 +131,7 @@ public class User implements Serializable {
         return activities;
     }
 
-    public void addActivity(Activity activity) {
-        this.activities.add(activity);
-    }
+    public void addActivity(@NotNull Activity activity) { this.activities.add(activity); }
 
-    public void removeActivity(Activity activity){ this.activities.remove(activity); }
+    public void removeActivity(@NotNull Activity activity){ this.activities.remove(activity); }
 }

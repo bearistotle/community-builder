@@ -1,11 +1,34 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head>
-  <meta charset="UTF-8"/>
-  <title>Title</title>
-</head>
+<head th:replace="fragments :: head"></head>
 <body>
-<!-- TODO: Create form to add activities -->
+<div class="container">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <nav th:replace="fragments :: nav"></nav>
+      <br />
+      <h1 th:text="${title}">You Forgot to Pass In a Title, Dummy!</h1>
+<!-- TODO: Create dropdown with stock activities -->
+      <form th:object="${activity}" action="" method="post">
+        <div class="form-group">
+          <label th:for="name">Activity Name</label>
+          <input th:field="*{name}" type="text" class="form-control" />
+        </div>
+        <span th:errors="*{name}" class="error"></span>
+        <div class="form-group">
+          <label th:for="description">Description</label>
+          <textarea th:field="*{description}" class="form-control" rows="7"></textarea>
+        </div>
+        <span th:errors="*{description}" class="error"></span>
+        <div class="form-group">
+          <input type="submit" value="Add Activity" class="btn btn-info form-control"/>
+        </div>
+      </form>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+</div>
 </body>
 </html>
 
