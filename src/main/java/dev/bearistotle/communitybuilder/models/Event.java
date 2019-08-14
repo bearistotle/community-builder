@@ -103,7 +103,10 @@ public class Event {
         this.users = new ArrayList<>();
     }
 
-    public Event(){}
+    public Event(){
+        this.numParticipants = new HashMap<>();
+        this.users = new ArrayList<>();
+    }
 
     public int getEventId() {
         return eventId;

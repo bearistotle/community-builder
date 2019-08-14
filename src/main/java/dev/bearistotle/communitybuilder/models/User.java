@@ -58,7 +58,10 @@ public class User implements Serializable {
         this.activities = new ArrayList<>();
     }
 
-    public User(){}
+    public User(){
+        this.events = new ArrayList<>();
+        this.activities = new ArrayList<>();
+    }
 
     @Override
     public boolean equals(Object o){

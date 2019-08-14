@@ -52,7 +52,10 @@ public class Activity {
         this.events = new ArrayList<>();
     }
 
-    public Activity(){}
+    public Activity(){
+        this.users = new ArrayList<>();
+        this.events = new ArrayList<>();
+    }
 
     public int getActivityId() {
         return activityId;

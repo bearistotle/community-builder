@@ -16,7 +16,8 @@ import javax.validation.Valid;
 import java.util.List;
 
 // TODO: Finish controller for activities pages, incl. getting user from session and adding activities to/getting
-//  activities from the logged in user.
+//   activities from the logged in user.
+
 @Controller
 @RequestMapping(value = "activities")
 public class ActivityController {
@@ -55,7 +56,7 @@ public class ActivityController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String add(Model model,
                       HttpSession session,
-                      @Valid @ModelAttribute("activity") Activity newActivity,
+                      @Valid @ModelAttribute("newActivity") Activity newActivity,
                       Errors errors){
         if (session.getAttribute("user") == null){
             return "redirect:/user/login";
@@ -69,7 +70,7 @@ public class ActivityController {
             return "activities/add";
         }
 
-        // else: save activity info
+        // save activity info
         user.addActivity(newActivity);
         newActivity.addUser(user);
         activityDao.save(newActivity);

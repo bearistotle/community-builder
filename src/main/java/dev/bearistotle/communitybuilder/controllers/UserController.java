@@ -31,7 +31,9 @@ public class UserController {
         if (session.getAttribute("user") == null){
             return "redirect:/user/login";
         }
+        // get user from session
         User user = (User) session.getAttribute("user");
+        System.out.println(user.toString());
         model.addAttribute("user", user);
         model.addAttribute("title", "Users");
 
@@ -140,7 +142,7 @@ public class UserController {
         String pwHash = HashUtils.getSaltedHash(password);
         newUser.setPwHash(pwHash);
         userDao.save(newUser);
-        session.setAttribute("user",newUser);
+        session.setAttribute("user",newUser.getUsername());
 
         return "redirect:";
     }
@@ -165,7 +167,7 @@ public class UserController {
         if (userDao.findByUsername(user.getUsername()) != null) {
             User registeredUser = userDao.findByUsername(user.getUsername());
             if (HashUtils.checkPassword(password, registeredUser.getPwHash())) {
-                session.setAttribute("user", user);
+                session.setAttribute("user", user.getUsername());
                 return "user/index";
             }
         }
