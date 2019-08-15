@@ -32,8 +32,7 @@ public class UserController {
             return "redirect:/user/login";
         }
         // get user from session
-        User user = (User) session.getAttribute("user");
-        System.out.println(user.toString());
+        User user = userDao.findByEmail((String) session.getAttribute("user"));
         model.addAttribute("user", user);
         model.addAttribute("title", "Users");
 
@@ -142,16 +141,14 @@ public class UserController {
         String pwHash = HashUtils.getSaltedHash(password);
         newUser.setPwHash(pwHash);
         userDao.save(newUser);
-        session.setAttribute("user",newUser.getUsername());
+        session.setAttribute("user",newUser.getEmail());
 
         return "redirect:";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model){
-        // check if already logged in
-        // display "You are already logged in as user X... Do you want to log out?" with logout button
-        // render login form
+
         User user = new User();
         model.addAttribute("title","Log In");
         model.addAttribute("user", user);
@@ -166,8 +163,10 @@ public class UserController {
                         @RequestParam String password) throws Exception {
         if (userDao.findByUsername(user.getUsername()) != null) {
             User registeredUser = userDao.findByUsername(user.getUsername());
+
             if (HashUtils.checkPassword(password, registeredUser.getPwHash())) {
-                session.setAttribute("user", user.getUsername());
+                session.setAttribute("user", registeredUser.getEmail());
+
                 return "user/index";
             }
         }
@@ -182,7 +181,10 @@ public class UserController {
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout(Model model, HttpSession session){
+
+        // Should this be session.invalidate()?
         session.removeAttribute("user");
+
         return "redirect:";
     }
 }
