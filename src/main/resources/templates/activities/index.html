@@ -10,9 +10,24 @@
       <br />
       <h1 th:text="${user.getUsername()} + ': ' + ${title}">You Forgot to Pass In a Title Dummy!</h1>
       <br />
-      <ul th:unless="${#lists.isEmpty(activities)}">
-        <li th:each="activity : ${activities}" th:text="${activity.name}"></li>
-      </ul>
+      <table class="table table-hover table-striped" th:unless="${#lists.isEmpty(activities)}">
+        <thead>
+          <th>Name</th>
+          <th>Description</th>
+        </thead>
+        <tbody>
+        <tr th:each="activity : ${activities}" >
+          <td th:text="${activity.name}"></td>
+          <td th:text="${activity.description}"></td>
+          <td>
+            <div class="btn btn-group">
+              <a class="btn btn-info" th:href="@{/activities/edit(activityId=${activity.activityId})}">Edit</a>
+              <a class="btn btn-danger" th:href="@{/activities/remove(activityId=${activity.activityId})}">Delete</a>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
       <p th:if="${#lists.isEmpty(activities)}">Really? You can't think of <emph>anything</emph> you'd like to do??</p>
       <br />
       <a class="btn btn-info" href="/activities/add">Add Activity</a>

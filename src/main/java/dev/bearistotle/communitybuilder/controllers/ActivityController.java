@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -18,9 +16,7 @@ import java.util.List;
 
 // TODO: Finish controller for activities pages, incl. getting user from session and adding activities to/getting
 //   activities from the logged in user.
-
-// TODO #1: Currently, when an activity is added, a new user is created with the logged in user's username and null in
-//   everything else. Fix this.
+// TODO #1: Fix error: (type=Method Not Allowed, status=405) Request method 'GET' not supported
 
 @Controller
 @RequestMapping(value = "activities")
@@ -36,10 +32,10 @@ public class ActivityController {
         if (session.getAttribute("user") == null){
             return "redirect:/user/login";
         }
-        List<Activity> activities = (List<Activity>) activityDao.findAll();
         User user = userDao.findByEmail((String) session.getAttribute("user"));
+        List<Activity> activities = user.getActivities();
         model.addAttribute("title","Activities");
-        model.addAttribute(activities);
+        model.addAttribute("activities", activities);
         model.addAttribute(user);
 
         return "activities/index";
@@ -83,4 +79,55 @@ public class ActivityController {
 
         return "redirect:";
     }
+
+    @RequestMapping(value = "/edit?activityId={activityId}", method = RequestMethod.GET)
+    public String edit(Model model,
+                       HttpSession session,
+                       @PathVariable("activityId") Integer activityId){
+
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
+
+        Activity activity = activityDao.findOne(activityId);
+        model.addAttribute("activity", activity);
+        model.addAttribute("title", String.format("Edit %s", activity.getName()));
+
+        return "/activities/edit";
+    }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    public String edit(Model model,
+                       HttpSession session){
+
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
+        return "";
+    }
+
+    @RequestMapping(value = "/remove?activityId={activityId}", method = RequestMethod.GET)
+    public String confirmRemoval(Model model,
+                         HttpSession session,
+                         @PathVariable("activityId") Integer activityId){
+
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
+
+        return "activities/remove";
+    }
+
+        @RequestMapping(value = "/remove", method = RequestMethod.POST)
+        public String remove(Model model,
+                             HttpSession session,
+                             @RequestParam Integer activityId){
+
+            if (session.getAttribute("user") == null){
+                return "redirect:/user/login";
+            }
+
+        return "activities";
+        }
+
 }
