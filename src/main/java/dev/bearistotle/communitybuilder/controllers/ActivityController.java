@@ -93,17 +93,18 @@ public class ActivityController {
         model.addAttribute("activity", activity);
         model.addAttribute("title", String.format("Edit %s", activity.getName()));
 
-        return "/activities/edit";
+        return "activities/edit";
     }
 
-    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "/edit?activityId={activityId}", method = RequestMethod.POST)
     public String edit(Model model,
-                       HttpSession session){
+                       HttpSession session,
+                       @RequestParam Activity activity){
 
         if (session.getAttribute("user") == null){
             return "redirect:/user/login";
         }
-        return "";
+        return "activities/index";
     }
 
     @RequestMapping(value = "/remove?activityId={activityId}", method = RequestMethod.GET)
@@ -118,10 +119,10 @@ public class ActivityController {
         return "activities/remove";
     }
 
-        @RequestMapping(value = "/remove", method = RequestMethod.POST)
+        @RequestMapping(value = "/remove?activityId={activityId}", method = RequestMethod.POST)
         public String remove(Model model,
                              HttpSession session,
-                             @RequestParam Integer activityId){
+                             @RequestParam Activity activity){
 
             if (session.getAttribute("user") == null){
                 return "redirect:/user/login";
