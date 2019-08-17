@@ -10,7 +10,10 @@
       <br />
       <h1 th:text="${title}">You Forgot to Pass In a Title, Dummy!</h1>
       <!-- TODO: Create dropdown with stock activities -->
-      <form th:object="${activity}" action="" method="post">
+      <form th:object="${activity}" th:action="@{/activities/edit}" method="post">
+        <div class="form-group">
+          <input type="hidden" th:field="*{activityId}" />
+        </div>
         <div class="form-group">
           <label th:for="name">Activity Name</label>
           <input th:field="*{name}" type="text" class="form-control" />
@@ -22,7 +25,7 @@
         </div>
         <span th:errors="*{description}" class="error"></span>
         <div class="form-group">
-          <input type="submit" value="Add Activity" class="btn btn-info form-control"/>
+          <input type="submit" value="Update Activity" class="btn btn-info form-control"/>
         </div>
       </form>
     </div>

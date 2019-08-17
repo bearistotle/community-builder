@@ -6,6 +6,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+// TODO: Add reserved dates (and other important fields) to this class
+
 @Entity
 @Transactional
 @Table(name = "Location")

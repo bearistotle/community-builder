@@ -6,7 +6,9 @@ import javax.persistence.*;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,13 +17,13 @@ import java.util.List;
  * activity, and set of users.
  * Minimal constructor: Event(String name,
  *                      String description,
- *                      LocalDateTime beginning,
+ *                      LocalDateTime startTime,
  *                      LocalDateTime end,
  *                      Location location,
  *                      Activity activity)
  * Maximal constructor: Event(String name,
  *                            String description,
- *                            LocalDateTime beginning,
+ *                            LocalDateTime startTime,
  *                            LocalDateTime end,
  *                            Location location,
  *                            Activity activity,
@@ -49,11 +51,15 @@ public class Event {
 
     @NotNull
     @DateTimeFormat
-    private LocalDateTime beginning;
+    private LocalDate date;
 
     @NotNull
     @DateTimeFormat
-    private LocalDateTime end;
+    private LocalTime startTime;
+
+    @NotNull
+    @DateTimeFormat
+    private LocalTime endTime;
 
     @ManyToOne
     @NotNull
@@ -71,16 +77,18 @@ public class Event {
 
     public Event(String name,
                  String description,
-                 LocalDateTime beginning,
-                 LocalDateTime end,
+                 LocalDate date,
+                 LocalTime startTime,
+                 LocalTime endTime,
                  Location location,
                  Activity activity,
                  HashMap<String, Integer> numParticipants,
                  List<User> users){
         this.name = name;
         this.description = description;
-        this.beginning = beginning;
-        this.end = end;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.location = location;
         this.activity = activity;
         this.numParticipants = numParticipants;
@@ -89,14 +97,16 @@ public class Event {
 
     public Event(String name,
                  String description,
-                 LocalDateTime beginning,
-                 LocalDateTime end,
+                 LocalDate date,
+                 LocalTime startTime,
+                 LocalTime endTime,
                  Location location,
                  Activity activity){
         this.name = name;
         this.description = description;
-        this.beginning = beginning;
-        this.end = end;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.location = location;
         this.activity = activity;
         this.numParticipants = new HashMap<>();
@@ -128,6 +138,10 @@ public class Event {
         this.description = description;
     }
 
+    public LocalDate getDate(){ return date; }
+
+    public void setDate(LocalDate date){ this.date = date; }
+
     public Location getLocation() {
         return location;
     }
@@ -154,20 +168,20 @@ public class Event {
 
     public void removeUser(User user){ this.users.remove(user); }
 
-    public LocalDateTime getBeginning() {
-        return beginning;
+    public LocalTime getStartTime() {
+        return startTime;
     }
 
-    public void setBeginning(LocalDateTime beginning) {
-        this.beginning = beginning;
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
     }
 
-    public LocalDateTime getEnd() {
-        return end;
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
-    public void setEnd(LocalDateTime end) {
-        this.end = end;
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
     }
 
     public HashMap<String, Integer> getNumParticipants() {

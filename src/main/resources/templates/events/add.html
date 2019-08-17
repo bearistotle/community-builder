@@ -12,15 +12,43 @@
       <h1 th:text="${title}">You Forgot to Pass In a Title Dummy!</h1>
       <br />
       <form th:object="${event}" action="" method="post">
-
         <div class="form-group">
-          <label th:for="email">Email</label>
-          <input th:field="*{email}" type="email" class="form-control" />
+          <label th:for="name">Name</label>
+          <input th:field="*{name}" type="text" class="form-control" />
         </div>
-        <span th:errors="*{email}" class="error"></span>
-
-
-        <input type="submit" class="btn btn-info" value="Register" />
+        <span th:errors="*{name}" class="error"></span>
+        <div class="form-group">
+          <label th:for="description">Description</label>
+          <textarea th:field="*{description}" class="form-control"></textarea>
+        </div>
+        <span th:errors="*{description}" class="error"></span>
+        <div class="form-group">
+          <label th:for="date">Date</label>
+          <input th:field="*{date}" type="date" class="form-control"/>
+        </div>
+        <span th:errors="*{date}" class="error"></span>
+        <div class="form-group">
+          <label th:for="startTime">Start Time</label>
+          <input th:field="*{startTime}" type="time" class="form-control"/>
+        </div>
+        <span th:errors="*{startTime}" class="error"></span>
+        <div class="form-group">
+          <label th:for="endTime">End Time</label>
+          <input th:field="*{endTime}" type="time" class="form-control"/>
+        </div>
+        <span th:errors="*{endTime}" class="error"></span>
+        <div class="form-group">
+          <label th:for="location">Location</label>
+          <input th:field="*{location}" type="text" class="form-control"/>
+        </div>
+        <span th:errors="*{location}" class="error"></span>
+        <div class="form-group">
+          <label th:for="activity">Activity</label>
+          <!-- TODO: Switch location and activity to select tags w/ option to create new -->
+          <input th:field="*{activity}" type="text" class="form-control"/>
+        </div>
+        <span th:errors="*{activity}" class="error"></span>
+        <input type="submit" class="btn btn-info" value="Add Event" />
       </form>
     </div>
     <div class="col-sm-2"></div>
