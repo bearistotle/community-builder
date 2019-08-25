@@ -8,7 +8,7 @@
     <div class="col-sm-8">
       <nav th:replace="fragments :: nav"></nav>
       <br />
-      <h1 th:text="${user.getUsername()} + ': ' + ${title}">You Forgot to Pass In a Title Dummy!</h1>
+      <h1 th:text="${title} + ': ' + ${user.getUsername()}">You Forgot to Pass In a Title Dummy!</h1>
       <br />
       <table class="table table-hover table-striped" th:unless="${#lists.isEmpty(activities)}">
         <thead>
@@ -30,7 +30,7 @@
       </table>
       <p th:if="${#lists.isEmpty(activities)}">Really? You can't think of <emph>anything</emph> you'd like to do??</p>
       <br />
-      <a class="btn btn-info" href="/activities/add">Add Activity</a>
+      <a class="btn btn-info" th:href="@{/activities/add}">Add Activity</a>
     </div>
     <div class="col-sm-2"></div>
   </div>

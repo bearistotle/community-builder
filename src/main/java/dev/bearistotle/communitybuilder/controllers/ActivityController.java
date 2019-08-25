@@ -16,7 +16,7 @@ import java.util.List;
 
 // TODO: Finish controller for activities pages, incl. getting user from session and adding activities to/getting
 //   activities from the logged in user.
-// TODO #1: Fix error: (type=Method Not Allowed, status=405) Request method 'GET' not supported
+// TODO #2: Fix error: (type=Method Not Allowed, status=405) Request method 'GET' not supported
 
 @Controller
 @RequestMapping(value = "activities")

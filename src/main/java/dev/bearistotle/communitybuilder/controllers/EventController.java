@@ -6,15 +6,21 @@ import dev.bearistotle.communitybuilder.models.User;
 import dev.bearistotle.communitybuilder.models.data.EventDao;
 import dev.bearistotle.communitybuilder.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 //TODO: Add equals and toString methods to all classes
 //TODO: Read https://vladmihalcea.com/the-best-way-to-use-the-manytomany-annotation-with-jpa-and-hibernate/ and figure
@@ -28,16 +34,24 @@ public class EventController {
     @Autowired
     private UserDao userDao;
 
+    // TODO: Figure out how to use @InitBinder to fix typeMismatch error
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(LocalDate.class, "date", new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
+    }
+
+
     @RequestMapping(value="")
     public String index(Model model, HttpSession session){
         if (session.getAttribute("user") == null){
             return "redirect:/user/login";
         }
-        // TODO: refactor to get events for the specific user
+
         User user = userDao.findByEmail((String) session.getAttribute("user"));
-        model.addAttribute("events", eventDao.findAll());
+        model.addAttribute("events", user.getEvents());
         model.addAttribute("title", "Events");
         model.addAttribute("user", user);
+
         return "events/index";
     }
 
@@ -46,6 +60,7 @@ public class EventController {
         if (session.getAttribute("user") == null){
             return "redirect:/user/login";
         }
+
         Event event = new Event();
         User user = userDao.findByEmail((String) session.getAttribute("user"));
         model.addAttribute(event);
@@ -59,21 +74,29 @@ public class EventController {
     public String add(Model model,
                       HttpSession session,
                       @Valid @ModelAttribute("newEvent") Event newEvent,
-                      Errors errors){
+                      Errors errors,
+                      @RequestParam Integer minParticipants,
+                      @RequestParam Integer maxParticipants){
         if (session.getAttribute("user") == null){
             return "redirect:/user/login";
         }
 
         User user = userDao.findByEmail((String) session.getAttribute("user"));
-        // validate form
+
         if (errors.hasErrors()){
             model.addAttribute("title", "Events");
             model.addAttribute("event", newEvent);
+            List<ObjectError> errorsToPrint= errors.getAllErrors();
+            for (ObjectError e: errorsToPrint){
+                System.out.println(e);
+            }
             return "events/add";
         }
-
-        // save activity info
+        HashMap<String, Integer> numParticipants = new HashMap<>();
+        numParticipants.put("min", minParticipants);
+        numParticipants.put("max", maxParticipants);
         newEvent.addUser(user);
+        newEvent.setNumParticipants(numParticipants);
         eventDao.save(newEvent);
         user.addEvent(newEvent);
 

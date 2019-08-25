@@ -31,8 +31,7 @@ public class User implements Serializable {
     private String email;
 
     private String pwHash;
-    //Room Number?
-    //Calendar?
+    // TODO: Determine if any other fields are needed (for instance a calendar field)
     @ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_event",

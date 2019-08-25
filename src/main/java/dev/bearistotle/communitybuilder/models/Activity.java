@@ -6,6 +6,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
+// TODO #1: Refactor code so that Availability is its own object. This is a more logical abstraction. There are
+//  potential participations in an activity (availabilities) and actual participations (Events), instead of having the
+//  actual participation be one object and the potential participation be a field in the activity itself.
 // TODO: Consider adding a numParticipants field
 @Entity
 @Transactional

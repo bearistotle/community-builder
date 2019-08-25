@@ -2,7 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="fragments :: head"></head>
 <body>
-<!-- TODO: Finish add event form -->
+<!-- TODO #1: Re-work form to account for types of Event obj fields; obj binding does not make sense here. Consider
+       creating a form object for this. Then extract the datum for each field, convert to correct type and construct the
+       event object with the resulting data. -->
 <div class="container">
   <div class="row">
     <div class="col-sm-2"></div>
@@ -11,6 +13,7 @@
       <br />
       <h1 th:text="${title}">You Forgot to Pass In a Title Dummy!</h1>
       <br />
+      <!-- TODO: Rearrange form for better aesthetics -->
       <form th:object="${event}" action="" method="post">
         <div class="form-group">
           <label th:for="name">Name</label>
@@ -48,6 +51,16 @@
           <input th:field="*{activity}" type="text" class="form-control"/>
         </div>
         <span th:errors="*{activity}" class="error"></span>
+        <div class="form-group">
+          <label th:for="minParticipants">Minimum Participants</label>
+          <input type="number" class="form-control" name="minParticipants" id="minParticipants"/>
+        </div>
+        <span th:text="${minParticipantsError}" class="error"></span>
+        <div class="form-group">
+          <label th:for="maxParticipants">Maximum Participants</label>
+          <input type="number" class="form-control" name="maxParticipants" id="maxParticipants"/>
+        </div>
+        <span th:text="${maxParticipantsError}" class="error"></span>
         <input type="submit" class="btn btn-info" value="Add Event" />
       </form>
     </div>
