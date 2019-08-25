@@ -6,6 +6,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 // TODO #1: Refactor code so that Availability is its own object. This is a more logical abstraction. There are
 //  potential participations in an activity (availabilities) and actual participations (Events), instead of having the
 //  actual participation be one object and the potential participation be a field in the activity itself.
@@ -30,21 +32,25 @@ public class Activity {
     private String description;
 
     @ManyToMany(mappedBy = "activities", cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
-    private List<User> users;
-
+    private ArrayList<User> users;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="activity_id")
-    private List<Event> events = new ArrayList<>();
+    private ArrayList<Event> events;
+
+    @ManyToMany(mappedBy = "availabilities", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+    private ArrayList<Availability> availabilities;
 
     public Activity(String name,
                     String description,
-                    List<User> users,
-                    List<Event> events) {
+                    ArrayList<User> users,
+                    ArrayList<Event> events,
+                    ArrayList<Availability> availabilities) {
         this.name = name;
         this.description = description;
         this.users = users;
         this.events = events;
+        this.availabilities = availabilities;
     }
 
     public Activity(String name,
@@ -53,11 +59,13 @@ public class Activity {
         this.description = description;
         this.users = new ArrayList<>();
         this.events = new ArrayList<>();
+        this.availabilities = new ArrayList<>();
     }
 
     public Activity(){
         this.users = new ArrayList<>();
         this.events = new ArrayList<>();
+        this.availabilities = new ArrayList<>();
     }
 
     public int getActivityId() {
@@ -80,7 +88,7 @@ public class Activity {
         this.description = description;
     }
 
-    public List<User> getUsers() {
+    public ArrayList<User> getUsers() {
         return users;
     }
 
@@ -90,7 +98,7 @@ public class Activity {
 
     public void removeUser(User user){ this.users.remove(user); }
 
-    public List<Event> getEvents() {
+    public ArrayList<Event> getEvents() {
         return events;
     }
 
@@ -99,4 +107,50 @@ public class Activity {
     }
 
     public void removeEvent(Event event){ this.events.remove(event); }
+
+    public void setUsers(ArrayList<User> users) {
+        this.users = users;
+    }
+
+    public void setEvents(ArrayList<Event> events) {
+        this.events = events;
+    }
+
+    public ArrayList<Availability> getAvailabilities() {
+        return availabilities;
+    }
+
+    public void setAvailabilities(ArrayList<Availability> availabilities) {
+        this.availabilities = availabilities;
+    }
+
+    public void addAvailability(Availability availability){
+        this.availabilities.add(availability);
+    }
+
+    public void removeAvailability(Availability availability){
+        this.availabilities.remove(availability);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Activity)) return false;
+        Activity activity = (Activity) o;
+        return activityId == activity.activityId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(activityId);
+    }
+
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "id='" + activityId + '\'' +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

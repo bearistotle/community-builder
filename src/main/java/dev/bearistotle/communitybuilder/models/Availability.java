@@ -29,8 +29,6 @@ public class Availability {
 
     private LocalDate date;
 
-    private ArrayList<DayOfWeek> days;
-
     @NotNull
     private LocalTime startTime;
 
@@ -60,22 +58,6 @@ public class Availability {
 
     public Availability(Activity activity,
                         Resident resident,
-                        ArrayList<DayOfWeek> days,
-                        LocalTime startTime,
-                        LocalTime endTime,
-                        String recurrencePattern,
-                        Location location){
-        this.activity = activity;
-        this.resident = resident;
-        this.days = days;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.recurrencePattern = recurrencePattern;
-        this.location = location;
-    }
-
-    public Availability(Activity activity,
-                        Resident resident,
                         LocalDate date,
                         LocalTime startTime,
                         LocalTime endTime,
@@ -83,20 +65,6 @@ public class Availability {
         this.activity = activity;
         this.resident = resident;
         this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.recurrencePattern = recurrencePattern;
-    }
-
-    public Availability(Activity activity,
-                        Resident resident,
-                        ArrayList<DayOfWeek> days,
-                        LocalTime startTime,
-                        LocalTime endTime,
-                        String recurrencePattern){
-        this.activity = activity;
-        this.resident = resident;
-        this.days = days;
         this.startTime = startTime;
         this.endTime = endTime;
         this.recurrencePattern = recurrencePattern;
@@ -130,14 +98,6 @@ public class Availability {
 
     public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public ArrayList<DayOfWeek> getDays() {
-        return days;
-    }
-
-    public void setDays(ArrayList<DayOfWeek> days) {
-        this.days = days;
     }
 
     public LocalTime getStartTime() {
@@ -191,7 +151,6 @@ public class Availability {
                 "activity=" + activity +
                 ", resident=" + resident +
                 ", date=" + date +
-                ", days=" + days +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", recurrencePattern='" + recurrencePattern + '\'' +

@@ -5,6 +5,7 @@ import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Objects;
 
 // TODO: Add reserved dates (and other important fields) to this class
 
@@ -52,5 +53,35 @@ public class Location {
 
     public void setMaxCapacity(int maxCapacity) {
         this.maxCapacity = maxCapacity;
+    }
+
+    public void addEvent(Event event){
+        this.events.add(event);
+    }
+
+    public void removeEvent(Event event){
+        this.events.remove(event);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Location)) return false;
+        Location location = (Location) o;
+        return locationId == location.locationId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(locationId);
+    }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "locationId=" + locationId +
+                ", name='" + name + '\'' +
+                ", maxCapacity=" + maxCapacity +
+                '}';
     }
 }

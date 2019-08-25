@@ -11,6 +11,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 /** Events are an actual calendar item, where users will participate in an activity. Relate a datetime, location,
  * activity, and set of users.
@@ -41,16 +42,19 @@ public class Event {
     private int eventId;
 
     @NotNull
-    @Size(min=3, max=25, message="Event names must be between 3 and 25 characters.")
+    @Size(min = 3, max = 25, message = "Event names must be between 3 and 25 characters.")
     private String name;
 
     @NotNull
-    @Size(min=10,max=500,message="Descriptions must be between 10 and 500 characters.")
+    @Size(min = 10, max = 500, message = "Descriptions must be between 10 and 500 characters.")
     private String description;
 
     @NotNull
     @DateTimeFormat
     private LocalDate date;
+
+    @NotNull
+    private String recurrencePattern;
 
     @NotNull
     @DateTimeFormat
@@ -65,56 +69,60 @@ public class Event {
     private Location location;
 
     @NotNull
-    @ManyToOne
-    private Activity activity;
-
-    /** numParticipants should be a HashMap with two entries, "min=x" and "max=y", for some Integers x and y. */
-    private HashMap<String, Integer> numParticipants;
-
     @ManyToMany(mappedBy = "events", cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
-    private List<User> users;
+    private ArrayList<Activity> activities;
+
+    private int minParticipants;
+
+    private int maxParticipants;
+
+    @ManyToMany(mappedBy = "events", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    private ArrayList<User> users;
 
     public Event(String name,
                  String description,
                  LocalDate date,
+                 String recurrencePattern,
                  LocalTime startTime,
                  LocalTime endTime,
                  Location location,
-                 Activity activity,
-                 HashMap<String, Integer> numParticipants,
-                 List<User> users){
+                 ArrayList<Activity> activities,
+                 int minParticipants,
+                 int maxParticipants,
+                 ArrayList<User> users) {
         this.name = name;
         this.description = description;
         this.date = date;
+        this.recurrencePattern = recurrencePattern;
         this.startTime = startTime;
         this.endTime = endTime;
         this.location = location;
-        this.activity = activity;
-        this.numParticipants = numParticipants;
+        this.activities = activities;
+        this.minParticipants = minParticipants;
+        this.maxParticipants = maxParticipants;
         this.users = users;
     }
 
     public Event(String name,
                  String description,
                  LocalDate date,
+                 String recurrencePattern,
                  LocalTime startTime,
                  LocalTime endTime,
                  Location location,
-                 Activity activity){
+                 ArrayList<Activity> activities) {
         this.name = name;
         this.description = description;
         this.date = date;
+        this.recurrencePattern = recurrencePattern;
         this.startTime = startTime;
         this.endTime = endTime;
         this.location = location;
-        this.activity = activity;
-        this.numParticipants = new HashMap<>();
+        this.activities = activities;
         this.users = new ArrayList<>();
     }
 
-    public Event(){
-        this.numParticipants = new HashMap<>();
-        this.users = new ArrayList<>();
+    public Event() {
     }
 
     public int getEventId() {
@@ -137,9 +145,13 @@ public class Event {
         this.description = description;
     }
 
-    public LocalDate getDate(){ return date; }
+    public LocalDate getDate() {
+        return date;
+    }
 
-    public void setDate(LocalDate date){ this.date = date; }
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
     public Location getLocation() {
         return location;
@@ -149,15 +161,23 @@ public class Event {
         this.location = location;
     }
 
-    public Activity getActivity() {
-        return activity;
+    public ArrayList<Activity> getActivities() {
+        return activities;
     }
 
-    public void setActivity(Activity activity) {
-        this.activity = activity;
+    public void setActivities(ArrayList<Activity> activities) {
+        this.activities = activities;
     }
 
-    public List<User> getUsers(){
+    public void addActivity(Activity activity){
+        this.activities.add(activity);
+    }
+
+    public void removeActivity(Activity activity){
+        this.activities.remove(activity);
+    }
+
+    public ArrayList<User> getUsers() {
         return users;
     }
 
@@ -165,7 +185,9 @@ public class Event {
         this.users.add(user);
     }
 
-    public void removeUser(User user){ this.users.remove(user); }
+    public void removeUser(User user) {
+        this.users.remove(user);
+    }
 
     public LocalTime getStartTime() {
         return startTime;
@@ -183,11 +205,59 @@ public class Event {
         this.endTime = endTime;
     }
 
-    public HashMap<String, Integer> getNumParticipants() {
-        return numParticipants;
+    public String getRecurrencePattern() {
+        return recurrencePattern;
     }
 
-    public void setNumParticipants(HashMap<String, Integer> numParticipants) {
-        this.numParticipants = numParticipants;
+    public void setRecurrencePattern(String recurrencePattern) {
+        this.recurrencePattern = recurrencePattern;
+    }
+
+    public int getMinParticipants() {
+        return minParticipants;
+    }
+
+    public void setMinParticipants(int minParticipants) {
+        this.minParticipants = minParticipants;
+    }
+
+    public int getMaxParticipants() {
+        return maxParticipants;
+    }
+
+    public void setMaxParticipants(int maxParticipants) {
+        this.maxParticipants = maxParticipants;
+    }
+
+    public void setUsers(ArrayList<User> users) {
+        this.users = users;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Event)) return false;
+        Event event = (Event) o;
+        return eventId == event.eventId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(eventId);
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "eventId=" + eventId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", date=" + date +
+                ", recurrencePattern='" + recurrencePattern + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", location=" + location +
+                ", activities=" + activities +
+                '}';
     }
 }
