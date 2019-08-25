@@ -86,7 +86,6 @@ public class Availability {
         this.startTime = startTime;
         this.endTime = endTime;
         this.recurrencePattern = recurrencePattern;
-        this.location = location;
     }
 
     public Availability(Activity activity,
@@ -101,7 +100,6 @@ public class Availability {
         this.startTime = startTime;
         this.endTime = endTime;
         this.recurrencePattern = recurrencePattern;
-        this.location = location;
     }
 
     public Availability(){}
