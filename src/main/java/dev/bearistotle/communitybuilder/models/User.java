@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 // TODO: Check all relationships (both sides) for correct type and correct set up
 // TODO: Add password confirm field (and password?) as @Transient fields
@@ -48,7 +49,6 @@ public class User implements Serializable {
     )
     private List<Activity> activities;
 
-
     public User(String username, String email, String pwHash){
         this.username = username;
         this.email = email;
@@ -63,30 +63,24 @@ public class User implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o){
-        if (o == this){
-            return true;
-        }
-        if (o == null){
-            return false;
-        }
-        if (!(o instanceof User)){
-            return false;
-        }
-        User other = (User) o;
-        return this.getUserId() == other.getUserId() &&
-                this.getUsername().equals(other.getUsername()) &&
-                this.getEmail().equals(other.getEmail());
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return userId == user.userId;
     }
 
     @Override
-    public int hashCode(){
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + userId;
-        result = prime * result + (email == null ? 0 : email.hashCode());
-        result = prime * result + (username == null ? 0 : username.hashCode());
-        return result;
+    public int hashCode() {
+        return Objects.hash(userId);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 
     public int getUserId() {
