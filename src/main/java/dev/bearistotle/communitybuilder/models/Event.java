@@ -69,7 +69,12 @@ public class Event {
     private Location location;
 
     @NotNull
-    @ManyToMany(mappedBy = "events", cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "event_activity",
+            joinColumns = { @JoinColumn(name = "event_id") },
+            inverseJoinColumns = { @JoinColumn(name = "activity_id") }
+    )
     private ArrayList<Activity> activities;
 
     private int minParticipants;

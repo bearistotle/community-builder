@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,12 +28,13 @@ public class Location {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name="location_id")
-    private List<Event> events;
+    private ArrayList<Event> events;
 
     public Location(String name, int maxCapacity){
         this.name = name;
         this.maxCapacity = maxCapacity;
     }
+
     public Location(){}
 
     public int getLocationId(){
@@ -53,6 +55,14 @@ public class Location {
 
     public void setMaxCapacity(int maxCapacity) {
         this.maxCapacity = maxCapacity;
+    }
+
+    public ArrayList<Event> getEvents(){
+        return this.events;
+    }
+
+    public void setEvents(ArrayList<Event> events){
+        this.events = events;
     }
 
     public void addEvent(Event event){

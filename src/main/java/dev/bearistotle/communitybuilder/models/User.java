@@ -39,7 +39,7 @@ public class User implements Serializable {
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "event_id") }
     )
-    private List<Event> events;
+    private ArrayList<Event> events;
 
     @ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(
@@ -47,7 +47,15 @@ public class User implements Serializable {
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "activity_id") }
     )
-    private List<Activity> activities;
+    private ArrayList<Activity> activities;
+
+    @ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_availability",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "availability_id") }
+            )
+    private ArrayList<Availability> availabilities;
 
     public User(String username, String email, String pwHash){
         this.username = username;

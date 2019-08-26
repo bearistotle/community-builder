@@ -3,7 +3,6 @@ package dev.bearistotle.communitybuilder.models;
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -17,11 +16,11 @@ public class Availability {
     @NotNull
     @GeneratedValue
     @Column(name = "id")
-    private int availibiliyId;
+    private int availabilityId;
 
     @NotNull
-    @ManyToOne
-    private Activity activity;
+    @ManyToMany(mappedBy = "availabilities", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+    private ArrayList<Activity> activities;
 
     @NotNull
     @ManyToOne
@@ -40,14 +39,14 @@ public class Availability {
 
     private Location location;
 
-    public Availability(Activity activity,
+    public Availability(ArrayList<Activity> activities,
                         Resident resident,
                         LocalDate date,
                         LocalTime startTime,
                         LocalTime endTime,
                         String recurrencePattern,
                         Location location){
-        this.activity = activity;
+        this.activities = activities;
         this.resident = resident;
         this.date = date;
         this.startTime = startTime;
@@ -56,13 +55,13 @@ public class Availability {
         this.location = location;
     }
 
-    public Availability(Activity activity,
+    public Availability(ArrayList<Activity> activities,
                         Resident resident,
                         LocalDate date,
                         LocalTime startTime,
                         LocalTime endTime,
                         String recurrencePattern){
-        this.activity = activity;
+        this.activities = activities;
         this.resident = resident;
         this.date = date;
         this.startTime = startTime;
@@ -73,15 +72,15 @@ public class Availability {
     public Availability(){}
 
     public int getAvailibiliyId() {
-        return availibiliyId;
+        return availabilityId;
     }
 
-    public Activity getActivity() {
-        return activity;
+    public ArrayList<Activity> getActivity() {
+        return activities;
     }
 
-    public void setActivity(Activity activity) {
-        this.activity = activity;
+    public void setActivity(ArrayList<Activity> activities) {
+        this.activities = activities;
     }
 
     public Resident getResident() {
@@ -137,18 +136,18 @@ public class Availability {
         if (this == o) return true;
         if (!(o instanceof Availability)) return false;
         Availability that = (Availability) o;
-        return availibiliyId == that.availibiliyId;
+        return availabilityId == that.availabilityId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(availibiliyId);
+        return Objects.hash(availabilityId);
     }
 
     @Override
     public String toString() {
         return "Availability{" +
-                "activity=" + activity +
+                "activities=" + activities +
                 ", resident=" + resident +
                 ", date=" + date +
                 ", startTime=" + startTime +

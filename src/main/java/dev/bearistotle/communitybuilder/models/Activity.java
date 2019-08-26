@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-// TODO #1: Refactor code so that Availability is its own object. This is a more logical abstraction. There are
-//  potential participations in an activity (availabilities) and actual participations (Events), instead of having the
-//  actual participation be one object and the potential participation be a field in the activity itself.
 // TODO: Consider adding a numParticipants field
 @Entity
 @Transactional
@@ -34,11 +31,15 @@ public class Activity {
     @ManyToMany(mappedBy = "activities", cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
     private ArrayList<User> users;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="activity_id")
+    @ManyToMany(mappedBy = "activities", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
     private ArrayList<Event> events;
 
-    @ManyToMany(mappedBy = "availabilities", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "activity_availability",
+            joinColumns = { @JoinColumn(name = "activity_id") },
+            inverseJoinColumns = { @JoinColumn(name = "availability_id") }
+    )
     private ArrayList<Availability> availabilities;
 
     public Activity(String name,
