@@ -18,8 +18,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 //TODO: Add equals and toString methods to all classes
@@ -74,9 +72,7 @@ public class EventController {
     public String add(Model model,
                       HttpSession session,
                       @Valid @ModelAttribute("newEvent") Event newEvent,
-                      Errors errors,
-                      @RequestParam Integer minParticipants,
-                      @RequestParam Integer maxParticipants){
+                      Errors errors){
         if (session.getAttribute("user") == null){
             return "redirect:/user/login";
         }
@@ -92,11 +88,8 @@ public class EventController {
             }
             return "events/add";
         }
-        HashMap<String, Integer> numParticipants = new HashMap<>();
-        numParticipants.put("min", minParticipants);
-        numParticipants.put("max", maxParticipants);
+
         newEvent.addUser(user);
-        newEvent.setNumParticipants(numParticipants);
         eventDao.save(newEvent);
         user.addEvent(newEvent);
 

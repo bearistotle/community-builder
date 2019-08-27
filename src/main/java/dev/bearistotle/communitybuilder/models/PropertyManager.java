@@ -10,7 +10,20 @@ public class PropertyManager extends User {
         this.isAdmin = true;
     }
 
+    public PropertyManager(){
+        super();
+    }
+
     public boolean isAdmin() {
         return isAdmin;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "isAdmin='" + isAdmin + '\'' +
+                "username='" + this.getUsername() + '\'' +
+                ", email='" + this.getEmail() + '\'' +
+                '}';
     }
 }

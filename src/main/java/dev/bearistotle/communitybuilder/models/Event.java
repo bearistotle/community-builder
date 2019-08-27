@@ -9,7 +9,6 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,10 +23,11 @@ import java.util.Objects;
  * Maximal constructor: Event(String name,
  *                            String description,
  *                            LocalDateTime startTime,
- *                            LocalDateTime end,
+ *                            LocalDateTime endTime,
  *                            Location location,
  *                            Activity activity,
- *                            HashMap<String, Integer> numParticipants,
+ *                            int minParticipants,
+ *                            int maxParticipants,
  *                            List<User> participants)
  *
  */
@@ -65,6 +65,7 @@ public class Event {
     private LocalTime endTime;
 
     @ManyToOne
+    @JoinColumn(name = "location_id")
     @NotNull
     private Location location;
 
@@ -75,15 +76,16 @@ public class Event {
             joinColumns = { @JoinColumn(name = "event_id") },
             inverseJoinColumns = { @JoinColumn(name = "activity_id") }
     )
-    private ArrayList<Activity> activities;
+    private List<Activity> activities;
 
     private int minParticipants;
 
     private int maxParticipants;
 
     @ManyToMany(mappedBy = "events", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    private ArrayList<User> users;
+    private List<User> users;
 
+    // TODO: Add 'creator' field. Will have editing privileges, etc. that participants ("users") won't.
     public Event(String name,
                  String description,
                  LocalDate date,
@@ -128,6 +130,8 @@ public class Event {
     }
 
     public Event() {
+        this.activities = new ArrayList<>();
+        this.users = new ArrayList<>();
     }
 
     public int getEventId() {
@@ -166,11 +170,11 @@ public class Event {
         this.location = location;
     }
 
-    public ArrayList<Activity> getActivities() {
+    public List<Activity> getActivities() {
         return activities;
     }
 
-    public void setActivities(ArrayList<Activity> activities) {
+    public void setActivities(List<Activity> activities) {
         this.activities = activities;
     }
 
@@ -182,7 +186,7 @@ public class Event {
         this.activities.remove(activity);
     }
 
-    public ArrayList<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
@@ -234,7 +238,7 @@ public class Event {
         this.maxParticipants = maxParticipants;
     }
 
-    public void setUsers(ArrayList<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 

@@ -7,17 +7,15 @@ import javax.persistence.*;
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-// TODO: Check all relationships (both sides) for correct type and correct set up
 // TODO: Add password confirm field (and password?) as @Transient fields
 @Entity
 @Transactional
 @Table(name = "User")
-public class User implements Serializable {
+public class User {
 
     @Id
     @GeneratedValue
@@ -32,6 +30,7 @@ public class User implements Serializable {
     private String email;
 
     private String pwHash;
+
     // TODO: Determine if any other fields are needed (for instance a calendar field)
     @ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(
@@ -39,7 +38,7 @@ public class User implements Serializable {
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "event_id") }
     )
-    private ArrayList<Event> events;
+    private List<Event> events;
 
     @ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(
@@ -47,15 +46,15 @@ public class User implements Serializable {
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "activity_id") }
     )
-    private ArrayList<Activity> activities;
+    private List<Activity> activities;
 
     @ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_availability",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "availability_id") }
-            )
-    private ArrayList<Availability> availabilities;
+    )
+    private List<Availability> availabilities;
 
     public User(String username, String email, String pwHash){
         this.username = username;
@@ -63,11 +62,15 @@ public class User implements Serializable {
         this.pwHash = pwHash;
         this.events = new ArrayList<>();
         this.activities = new ArrayList<>();
+        this.availabilities = new ArrayList<>();
+
     }
 
     public User(){
         this.events = new ArrayList<>();
         this.activities = new ArrayList<>();
+        this.availabilities = new ArrayList<>();
+
     }
 
     @Override
@@ -81,14 +84,6 @@ public class User implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(userId);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                '}';
     }
 
     public int getUserId() {
@@ -138,4 +133,20 @@ public class User implements Serializable {
     public void addActivity(@NotNull Activity activity) { this.activities.add(activity); }
 
     public void removeActivity(@NotNull Activity activity){ this.activities.remove(activity); }
+
+    public List<Availability> getAvailabilities() {
+        return availabilities;
+    }
+
+    public void setAvailabilities(List<Availability> availabilities) {
+        this.availabilities = availabilities;
+    }
+
+    public void addAvailability(Availability availability){
+        this.availabilities.add(availability);
+    }
+
+    public void removeAvailability(Availability availability){
+        this.availabilities.remove(availability);
+    }
 }

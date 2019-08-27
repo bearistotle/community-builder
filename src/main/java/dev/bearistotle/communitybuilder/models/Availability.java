@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -14,17 +15,19 @@ import java.util.Objects;
 public class Availability {
 
     @NotNull
+    @Id
     @GeneratedValue
     @Column(name = "id")
     private int availabilityId;
 
     @NotNull
     @ManyToMany(mappedBy = "availabilities", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
-    private ArrayList<Activity> activities;
+    private List<Activity> activities;
 
     @NotNull
     @ManyToOne
-    private Resident resident;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private LocalDate date;
 
@@ -37,17 +40,18 @@ public class Availability {
     @NotNull
     private String recurrencePattern;
 
+    @ManyToOne
     private Location location;
 
     public Availability(ArrayList<Activity> activities,
-                        Resident resident,
+                        User user,
                         LocalDate date,
                         LocalTime startTime,
                         LocalTime endTime,
                         String recurrencePattern,
                         Location location){
         this.activities = activities;
-        this.resident = resident;
+        this.user = user;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -56,39 +60,41 @@ public class Availability {
     }
 
     public Availability(ArrayList<Activity> activities,
-                        Resident resident,
+                        User user,
                         LocalDate date,
                         LocalTime startTime,
                         LocalTime endTime,
                         String recurrencePattern){
         this.activities = activities;
-        this.resident = resident;
+        this.user = user;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
         this.recurrencePattern = recurrencePattern;
     }
 
-    public Availability(){}
+    public Availability(){
+        this.activities = new ArrayList<>();
+    }
 
     public int getAvailibiliyId() {
         return availabilityId;
     }
 
-    public ArrayList<Activity> getActivity() {
+    public List<Activity> getActivity() {
         return activities;
     }
 
-    public void setActivity(ArrayList<Activity> activities) {
+    public void setActivity(List<Activity> activities) {
         this.activities = activities;
     }
 
-    public Resident getResident() {
-        return resident;
+    public User getUser() {
+        return user;
     }
 
-    public void setResident(Resident resident) {
-        this.resident = resident;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public LocalDate getDate() {
@@ -148,7 +154,7 @@ public class Availability {
     public String toString() {
         return "Availability{" +
                 "activities=" + activities +
-                ", resident=" + resident +
+                ", user=" + user +
                 ", date=" + date +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +

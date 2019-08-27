@@ -23,16 +23,15 @@ public class Activity {
     @Size(min=3,max=30,message="Activity name must be between 3 and 30 characters.")
     private String name;
 
-
     @NotNull
     @Size(min=10,max=500,message="Activity description must be between 10 and 500 characters.")
     private String description;
 
     @ManyToMany(mappedBy = "activities", cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
-    private ArrayList<User> users;
+    private List<User> users;
 
     @ManyToMany(mappedBy = "activities", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
-    private ArrayList<Event> events;
+    private List<Event> events;
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(
@@ -40,7 +39,7 @@ public class Activity {
             joinColumns = { @JoinColumn(name = "activity_id") },
             inverseJoinColumns = { @JoinColumn(name = "availability_id") }
     )
-    private ArrayList<Availability> availabilities;
+    private List<Availability> availabilities;
 
     public Activity(String name,
                     String description,
@@ -89,8 +88,12 @@ public class Activity {
         this.description = description;
     }
 
-    public ArrayList<User> getUsers() {
+    public List<User> getUsers() {
         return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     public void addUser(User user) {
@@ -99,7 +102,7 @@ public class Activity {
 
     public void removeUser(User user){ this.users.remove(user); }
 
-    public ArrayList<Event> getEvents() {
+    public List<Event> getEvents() {
         return events;
     }
 
@@ -109,19 +112,14 @@ public class Activity {
 
     public void removeEvent(Event event){ this.events.remove(event); }
 
-    public void setUsers(ArrayList<User> users) {
-        this.users = users;
-    }
 
-    public void setEvents(ArrayList<Event> events) {
-        this.events = events;
-    }
+    public void setEvents(List<Event> events) { this.events = events; }
 
-    public ArrayList<Availability> getAvailabilities() {
+    public List<Availability> getAvailabilities() {
         return availabilities;
     }
 
-    public void setAvailabilities(ArrayList<Availability> availabilities) {
+    public void setAvailabilities(List<Availability> availabilities) {
         this.availabilities = availabilities;
     }
 

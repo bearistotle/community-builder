@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-// TODO: Add reserved dates (and other important fields) to this class
-
 @Entity
 @Transactional
 @Table(name = "Location")
@@ -26,16 +24,18 @@ public class Location {
 
     private int maxCapacity;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name="location_id")
-    private ArrayList<Event> events;
+    @OneToMany(mappedBy = "location", cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+    private List<Event> events;
 
     public Location(String name, int maxCapacity){
         this.name = name;
         this.maxCapacity = maxCapacity;
+        this.events = new ArrayList<>();
     }
 
-    public Location(){}
+    public Location(){
+        this.events = new ArrayList<>();
+    }
 
     public int getLocationId(){
         return locationId;
@@ -57,11 +57,11 @@ public class Location {
         this.maxCapacity = maxCapacity;
     }
 
-    public ArrayList<Event> getEvents(){
+    public List<Event> getEvents(){
         return this.events;
     }
 
-    public void setEvents(ArrayList<Event> events){
+    public void setEvents(List<Event> events){
         this.events = events;
     }
 

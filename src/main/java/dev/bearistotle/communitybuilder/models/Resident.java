@@ -1,19 +1,17 @@
 package dev.bearistotle.communitybuilder.models;
 
-import javax.persistence.OneToMany;
+
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Resident extends User {
 
-    @OneToMany
-    private ArrayList<Availability> availabilities;
+    // TODO: Determine what data structure is appropriate for these. Do I need a Match object w/ events and users and
+    //   a OneToMany relationship btw Resident and that object? Or something else? Ditto for availabilityMatches
+    private List<Event> eventMatches;
 
-    @OneToMany
-    private ArrayList<Event> eventMatches;
-
-    @OneToMany
-    private ArrayList<Availability> availabilityMatches;
+    private List<Availability> availabilityMatches;
 
     @NotNull
     private boolean isAdmin;
@@ -21,36 +19,24 @@ public class Resident extends User {
     public Resident(String username, String email, String pwHash){
         super(username, email, pwHash);
         this.isAdmin = false;
-        this.availabilities = new ArrayList<>();
         this.eventMatches = new ArrayList<>();
         this.availabilityMatches = new ArrayList<>();
     }
 
+    public Resident(){
+        super();
+        this.eventMatches = new ArrayList<>();
+        this.availabilityMatches = new ArrayList<>();
+    }
     public boolean isAdmin() {
         return isAdmin;
     }
 
-    public ArrayList<Availability> getAvailabilities() {
-        return availabilities;
-    }
-
-    public void setAvailabilities(ArrayList<Availability> availabilities) {
-        this.availabilities = availabilities;
-    }
-
-    public void addAvailability(Availability availability){
-        this.availabilities.add(availability);
-    }
-
-    public void removeAvailability(Availability availability){
-        this.availabilities.remove(availability);
-    }
-
-    public ArrayList<Event> getEventMatches() {
+    public List<Event> getEventMatches() {
         return eventMatches;
     }
 
-    public void setEventMatches(ArrayList<Event> eventMatches) {
+    public void setEventMatches(List<Event> eventMatches) {
         this.eventMatches = eventMatches;
     }
 
@@ -62,11 +48,11 @@ public class Resident extends User {
         this.eventMatches.remove(eventMatch);
     }
 
-    public ArrayList<Availability> getAvailabilityMatches() {
+    public List<Availability> getAvailabilityMatches() {
         return availabilityMatches;
     }
 
-    public void setAvailabilityMatches(ArrayList<Availability> availabilityMatches) {
+    public void setAvailabilityMatches(List<Availability> availabilityMatches) {
         this.availabilityMatches = availabilityMatches;
     }
 
@@ -76,5 +62,14 @@ public class Resident extends User {
 
     public void removeAvailabilityMatch(Availability availabilityMatch){
         this.availabilityMatches.remove(availabilityMatch);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "isAdmin='" + isAdmin + '\'' +
+                "username='" + this.getUsername() + '\'' +
+                ", email='" + this.getEmail() + '\'' +
+                '}';
     }
 }
