@@ -2,9 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="fragments :: head"></head>
 <body>
-<!-- TODO #1: Re-work form to account for types of Event obj fields; obj binding does not make sense here. Consider
-       creating a form object for this. Then extract the datum for each field, convert to correct type and construct the
-       event object with the resulting data. -->
 <div class="container">
   <div class="row">
     <div class="col-sm-2"></div>
@@ -54,7 +51,6 @@
         <div class="form-group">
           <label th:for="locations">Location</label>
           <select th:field="*{locations}" class="form-control">
-            <!-- TODO #1a: Fix error in option field here -->
             <option th:each="location : *{locations}" th:text="${location.name}" th:value="${location.locationId}">
               Location Name
             </option>
