@@ -36,6 +36,7 @@ import java.util.Objects;
 @Table(name = "Event")
 public class Event {
 
+    // TODO #1: Add @Transient fields to avoid typecasting error (or set problem fields to String)
     @Id
     @GeneratedValue
     @Column(name = "id")
@@ -117,6 +118,29 @@ public class Event {
                  LocalTime startTime,
                  LocalTime endTime,
                  Location location,
+                 ArrayList<Activity> activities,
+                 int minParticipants,
+                 int maxParticipants) {
+        this.name = name;
+        this.description = description;
+        this.date = date;
+        this.recurrencePattern = recurrencePattern;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.location = location;
+        this.activities = activities;
+        this.minParticipants = minParticipants;
+        this.maxParticipants = maxParticipants;
+        this.users = new ArrayList<>();
+    }
+
+    public Event(String name,
+                 String description,
+                 LocalDate date,
+                 String recurrencePattern,
+                 LocalTime startTime,
+                 LocalTime endTime,
+                 Location location,
                  ArrayList<Activity> activities) {
         this.name = name;
         this.description = description;
@@ -130,6 +154,7 @@ public class Event {
     }
 
     public Event() {
+        this.recurrencePattern = "never";
         this.activities = new ArrayList<>();
         this.users = new ArrayList<>();
     }

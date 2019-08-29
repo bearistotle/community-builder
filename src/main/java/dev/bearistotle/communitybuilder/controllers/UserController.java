@@ -18,6 +18,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+// TODO #2: Refactor to account for making User parent class for Resident and PropertyManager
 // TODO: Solidify understanding of exception handling and ensure code properly handles all necessary exceptions.
 @Controller
 @RequestMapping(value = "user")

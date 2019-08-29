@@ -1,10 +1,10 @@
 package dev.bearistotle.communitybuilder.controllers;
 
-import dev.bearistotle.communitybuilder.models.Activity;
-import dev.bearistotle.communitybuilder.models.Event;
-import dev.bearistotle.communitybuilder.models.User;
+import dev.bearistotle.communitybuilder.models.*;
 import dev.bearistotle.communitybuilder.models.data.EventDao;
+import dev.bearistotle.communitybuilder.models.data.LocationDao;
 import dev.bearistotle.communitybuilder.models.data.UserDao;
+import dev.bearistotle.communitybuilder.models.forms.AddEventForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -18,9 +18,10 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
-//TODO: Add equals and toString methods to all classes
 //TODO: Read https://vladmihalcea.com/the-best-way-to-use-the-manytomany-annotation-with-jpa-and-hibernate/ and figure
 //      out why you should use Set not List for @ManyToMany JPA associations. Refactor accordingly.
 @Controller
@@ -31,13 +32,15 @@ public class EventController {
     private EventDao eventDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private LocationDao locationDao;
 
-    // TODO: Figure out how to use @InitBinder to fix typeMismatch error
+    /** TODO: Figure out how to use @InitBinder to fix typeMismatch error
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(LocalDate.class, "date", new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
     }
-
+    */
 
     @RequestMapping(value="")
     public String index(Model model, HttpSession session){
@@ -59,10 +62,11 @@ public class EventController {
             return "redirect:/user/login";
         }
 
-        Event event = new Event();
         User user = userDao.findByEmail((String) session.getAttribute("user"));
-        model.addAttribute(event);
-        model.addAttribute(user);
+        List<Location> locations = (List<Location>) locationDao.findAll();
+        List<Activity> activities = user.getActivities();
+        AddEventForm form = new AddEventForm(locations, activities);
+        model.addAttribute("form", form);
         model.addAttribute("title","Add Event");
 
         return "events/add";
@@ -71,7 +75,7 @@ public class EventController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String add(Model model,
                       HttpSession session,
-                      @Valid @ModelAttribute("newEvent") Event newEvent,
+                      @Valid @ModelAttribute("form") AddEventForm form,
                       Errors errors){
         if (session.getAttribute("user") == null){
             return "redirect:/user/login";
@@ -81,13 +85,32 @@ public class EventController {
 
         if (errors.hasErrors()){
             model.addAttribute("title", "Events");
-            model.addAttribute("event", newEvent);
+            model.addAttribute("form", form);
+            // TODO: Remove this bit of code below once done debugging.
             List<ObjectError> errorsToPrint= errors.getAllErrors();
             for (ObjectError e: errorsToPrint){
                 System.out.println(e);
             }
             return "events/add";
         }
+
+        LocalDate date = LocalDate.parse(form.getDate());
+        LocalTime startTime = LocalTime.parse(form.getStartTime());
+        LocalTime endTime = LocalTime.parse(form.getEndTime());
+        ArrayList<Location> locationList = (ArrayList<Location>) form.getLocations();
+        Location location = locationList.get(0);
+        ArrayList<Activity> activities = (ArrayList<Activity>) form.getActivities();
+
+        Event newEvent = new Event(form.getName(),
+                form.getDescription(),
+                date,
+                form.getRecurrencePattern(),
+                startTime,
+                endTime,
+                location,
+                activities,
+                form.getMinParticipants(),
+                form.getMaxParticipants());
 
         newEvent.addUser(user);
         eventDao.save(newEvent);
