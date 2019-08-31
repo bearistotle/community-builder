@@ -9,7 +9,6 @@
       <nav th:replace="fragments :: nav"></nav>
       <br />
       <h1 th:text="${title}">You Forgot to Pass In a Title, Dummy!</h1>
-      <!-- TODO: Create dropdown with stock activities -->
       <form th:object="${activity}" th:action="@{/activities/edit}" method="post">
         <div class="form-group">
           <input th:value="${id}" type="hidden" name="id" class="form-control" />

@@ -13,12 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
-
-// TODO: Finish controller for activities pages, incl. getting user from session and adding activities to/getting
-//   activities from the logged in user.
-// TODO #2: Fix error: (type=Method Not Allowed, status=405) Request method 'GET' not supported
 
 @Controller
 @RequestMapping(value = "activities")
@@ -157,7 +152,6 @@ public class ActivityController {
         if (session.getAttribute("user") == null){
             return "redirect:/user/login";
         }
-    // TODO: remove row from user_activity table and event_activity table
         User user = userDao.findByEmail((String) session.getAttribute("user"));
         Activity activity = activityDao.findOne(activityId);
         List<Event> events = activity.getEvents();
