@@ -88,10 +88,6 @@ public class Location {
 
     @Override
     public String toString() {
-        return "Location{" +
-                "locationId=" + locationId +
-                ", name='" + name + '\'' +
-                ", maxCapacity=" + maxCapacity +
-                '}';
+        return name;
     }
 }

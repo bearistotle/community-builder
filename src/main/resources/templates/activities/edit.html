@@ -12,8 +12,9 @@
       <!-- TODO: Create dropdown with stock activities -->
       <form th:object="${activity}" th:action="@{/activities/edit}" method="post">
         <div class="form-group">
-          <input type="hidden" th:field="*{activityId}" />
+          <input th:value="${id}" type="hidden" name="id" class="form-control" />
         </div>
+        <span th:text="${idError}" class="error"></span>
         <div class="form-group">
           <label th:for="name">Activity Name</label>
           <input th:field="*{name}" type="text" class="form-control" />

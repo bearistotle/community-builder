@@ -45,6 +45,8 @@ public class AddEventForm {
         this.activities = activities;
     }
 
+    // TODO: Add constructor that takes Event object as parameter (for editing existing Events)
+
     public AddEventForm(){}
 
     public String getName() {

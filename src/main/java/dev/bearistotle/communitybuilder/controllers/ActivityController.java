@@ -92,6 +92,7 @@ public class ActivityController {
         Activity activity = activityDao.findOne(activityId);
         model.addAttribute("activity", activity);
         model.addAttribute("title", String.format("Edit %s", activity.getName()));
+        model.addAttribute("id", activityId);
 
         return "activities/edit";
     }
@@ -100,6 +101,7 @@ public class ActivityController {
     public String edit(Model model,
                        HttpSession session,
                        @ModelAttribute("activity") @Valid Activity activity,
+                       @RequestParam("id") int activityId,
                        Errors errors){
 
         if (session.getAttribute("user") == null){
@@ -111,19 +113,20 @@ public class ActivityController {
 
             return "activities/edit";
         }
-        if (activityDao.findOne(activity.getActivityId()) == null){
+        if (activityDao.findOne(activityId) == null){
 
             model.addAttribute("activity", activity);
             model.addAttribute("title", String.format("Edit %s", activity.getName()));
+            model.addAttribute("idError", "No activity found in database with this activityId");
 
             return "activities/edit";
         }
 
-        Activity storedActivity = activityDao.findOne(activity.getActivityId());
+        Activity storedActivity = activityDao.findOne(activityId);
         storedActivity.setName(activity.getName());
         storedActivity.setDescription(activity.getDescription());
 
-        // activityDao.save(storedActivity);
+        activityDao.save(storedActivity);
 
         return "redirect:";
     }

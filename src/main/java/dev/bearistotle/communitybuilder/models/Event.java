@@ -36,7 +36,6 @@ import java.util.Objects;
 @Table(name = "Event")
 public class Event {
 
-    // TODO #1: Add @Transient fields to avoid typecasting error (or set problem fields to String)
     @Id
     @GeneratedValue
     @Column(name = "id")

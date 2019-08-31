@@ -10,9 +10,30 @@
         <br />
         <h1 th:text="${title} + ': ' + ${user.getUsername()}">You Forgot to Pass In a Title Dummy!</h1>
         <br />
-        <ul th:unless="${#lists.isEmpty(events)}" >
-            <li th:each="event : ${events}" th:text="${event.name}"></li>
-        </ul>
+        <table class="table table-hover table-striped" th:unless="${#lists.isEmpty(events)}">
+          <thead>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Activities</th>
+          <th>Date</th>
+          <th>Location</th>
+          </thead>
+          <tbody>
+          <tr th:each="event : ${events}" >
+            <td th:text="${event.name}"></td>
+            <td th:text="${event.description}"></td>
+            <td th:text="${event.activities}"></td>
+            <td th:text="${event.date}"></td>
+            <td th:text="${event.location}"></td>
+            <td>
+              <div class="btn btn-group">
+                <a class="btn btn-info" th:href="@{/events/edit(eventId=${event.eventId})}">Edit</a>
+                <a class="btn btn-danger" th:href="@{/events/remove(eventId=${event.eventId})}">Delete</a>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
         <h3 th:if="${#lists.isEmpty(events)}">No events to display. Sad. Perhaps if you were more likable, people would
           invite you to things. You should really work on that...</h3>
         <br />

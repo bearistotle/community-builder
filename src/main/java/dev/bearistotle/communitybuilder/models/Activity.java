@@ -146,10 +146,6 @@ public class Activity {
 
     @Override
     public String toString() {
-        return "Activity{" +
-                "id='" + activityId + '\'' +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        return name;
     }
 }
