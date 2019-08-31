@@ -1,6 +1,7 @@
 package dev.bearistotle.communitybuilder.controllers;
 
 import dev.bearistotle.communitybuilder.models.Activity;
+import dev.bearistotle.communitybuilder.models.Event;
 import dev.bearistotle.communitybuilder.models.User;
 import dev.bearistotle.communitybuilder.models.data.ActivityDao;
 import dev.bearistotle.communitybuilder.models.data.UserDao;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 // TODO: Finish controller for activities pages, incl. getting user from session and adding activities to/getting
@@ -140,19 +142,32 @@ public class ActivityController {
             return "redirect:/user/login";
         }
 
+        Activity activity = activityDao.findOne(activityId);
+        model.addAttribute("activityName", activity.getName());
+        model.addAttribute("activityId", activityId);
+
         return "activities/remove";
     }
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     public String remove(Model model,
                          HttpSession session,
-                         @RequestParam Activity activity){
+                         @RequestParam("activityId") int activityId){
 
         if (session.getAttribute("user") == null){
             return "redirect:/user/login";
         }
+    // TODO: remove row from user_activity table and event_activity table
+        User user = userDao.findByEmail((String) session.getAttribute("user"));
+        Activity activity = activityDao.findOne(activityId);
+        List<Event> events = activity.getEvents();
+        for (Event event: events){
+            event.removeActivity(activity);
+        }
+        user.removeActivity(activity);
+        activityDao.delete(activity);
 
-    return "activities";
+    return "redirect:";
     }
 
 }

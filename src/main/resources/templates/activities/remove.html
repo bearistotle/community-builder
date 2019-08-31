@@ -9,14 +9,14 @@
       <nav th:replace="fragments :: nav"></nav>
       <br />
       <h1 th:text="${title}">You Forgot to Pass In a Title, Dummy!</h1>
-      <!-- TODO: Create dropdown with stock activities -->
       <br />
-      <p th:text="'The following activity will be removed: ' + ${activity.name}"></p>
+      <p th:text="'The following activity will be removed: ' + ${activityName}"></p>
+      <p>Note: This will also remove the activity from all events, but will not delete those events.</p>
       <form action="" method="post">
-        <input type="hidden" th:value="${activity.activityId}" name="activityId" />
+        <input type="hidden" th:value="${activityId}" name="activityId" />
         <input type="submit" value="Confirm" />
       </form>
-      <a class="btn btn-danger" href="@{/activities}">Cancel</a>
+      <a class="btn btn-danger" th:href="@{/activities}">Cancel</a>
     </div>
     <div class="col-sm-2"></div>
   </div>
