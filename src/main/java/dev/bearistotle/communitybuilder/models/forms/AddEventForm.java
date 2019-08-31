@@ -1,6 +1,7 @@
 package dev.bearistotle.communitybuilder.models.forms;
 
 import dev.bearistotle.communitybuilder.models.Activity;
+import dev.bearistotle.communitybuilder.models.Event;
 import dev.bearistotle.communitybuilder.models.Location;
 
 import javax.validation.constraints.NotNull;
@@ -45,7 +46,18 @@ public class AddEventForm {
         this.activities = activities;
     }
 
-    // TODO: Add constructor that takes Event object as parameter (for editing existing Events)
+    public AddEventForm(Event event, List<Location> locations){
+        this.name = event.getName();
+        this.description = event.getDescription();
+        this.date = event.getDate().toString();
+        this.recurrencePattern = event.getRecurrencePattern();
+        this.startTime = event.getStartTime().toString();
+        this.endTime = event.getEndTime().toString();
+        this.locations = locations;
+        this.activities = event.getActivities();
+        this.minParticipants = event.getMinParticipants();
+        this.maxParticipants = event.getMaxParticipants();
+    }
 
     public AddEventForm(){}
 

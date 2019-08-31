@@ -86,11 +86,7 @@ public class EventController {
         if (errors.hasErrors()){
             model.addAttribute("title", "Events");
             model.addAttribute("form", form);
-            // TODO: Remove this bit of code below once done debugging.
-            List<ObjectError> errorsToPrint= errors.getAllErrors();
-            for (ObjectError e: errorsToPrint){
-                System.out.println(e);
-            }
+
             return "events/add";
         }
 
@@ -118,4 +114,61 @@ public class EventController {
 
         return "redirect:";
     }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.GET)
+    public String edit(Model model,
+                       HttpSession session,
+                       @RequestParam("eventId") int eventId){
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
+
+        Event event = eventDao.findOne(eventId);
+        List<Location> locations = (List<Location>) locationDao.findAll();
+        AddEventForm form = new AddEventForm(event, locations);
+        model.addAttribute("form", form);
+        model.addAttribute("eventId", eventId);
+        model.addAttribute("title", "Edit Event: " + event.getName());
+
+        return "events/edit";
+    }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    public String edit(Model model,
+                       HttpSession session,
+                       @Valid @ModelAttribute("form") AddEventForm form,
+                       Errors errors,
+                       @RequestParam("eventId") int eventId){
+
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
+
+        Event event = eventDao.findOne(eventId);
+        ArrayList<Location> locationList = (ArrayList<Location>) form.getLocations();
+
+        if (errors.hasErrors()) {
+
+            model.addAttribute("title", "Edit Event: " + event.getName());
+            model.addAttribute("form", form);
+
+            return "events/edit";
+        }
+
+        event.setName(form.getName());
+        event.setDescription(form.getDescription());
+        event.setDate(LocalDate.parse(form.getDate()));
+        event.setRecurrencePattern(form.getRecurrencePattern());
+        event.setStartTime(LocalTime.parse(form.getStartTime()));
+        event.setEndTime(LocalTime.parse(form.getEndTime()));
+        event.setLocation(locationList.get(0));
+        event.setActivities(form.getActivities());
+        event.setMinParticipants(form.getMinParticipants());
+        event.setMaxParticipants(form.getMaxParticipants());
+
+        eventDao.save(event);
+
+        return "redirect:";
+    }
+
 }

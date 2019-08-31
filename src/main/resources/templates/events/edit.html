@@ -1,11 +1,89 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head>
-  <meta charset="UTF-8"/>
-  <title>Title</title>
-</head>
+<head th:replace="fragments :: head"></head>
 <body>
-
+<div class="container">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <nav th:replace="fragments :: nav"></nav>
+      <br />
+      <h1 th:text="${title}">You Forgot to Pass In a Title, Dummy!</h1>
+      <form th:object="${form}" th:action="@{/events/edit}" method="post">
+        <div class="form-group">
+          <input th:value="${eventId}" type="hidden" name="eventId" class="form-control" />
+        </div>
+        <span th:text="${idError}" class="error"></span>
+        <div class="form-group">
+          <label th:for="name">Name</label>
+          <input th:field="*{name}" type="text" class="form-control" />
+        </div>
+        <span th:errors="*{name}" class="error"></span>
+        <div class="form-group">
+          <label th:for="description">Description</label>
+          <textarea th:field="*{description}" class="form-control"></textarea>
+        </div>
+        <span th:errors="*{description}" class="error"></span>
+        <div class="form-group">
+          <label th:for="date">Date</label>
+          <input th:field="*{date}" type="date" class="form-control"/>
+        </div>
+        <span th:errors="*{date}" class="error"></span>
+        <div class="form-group">
+          <label th:for="recurrencePattern">Repeat</label>
+          <select th:field="*{recurrencePattern}" type="text" class="form-control">
+            <option value="never">Never</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+        </div>
+        <span th:error="*recurrencePattern" class="error"></span>
+        <div class="form-group">
+          <label th:for="startTime">Start Time</label>
+          <input th:field="*{startTime}" type="time" class="form-control"/>
+        </div>
+        <span th:errors="*{startTime}" class="error"></span>
+        <div class="form-group">
+          <label th:for="endTime">End Time</label>
+          <input th:field="*{endTime}" type="time" class="form-control"/>
+        </div>
+        <span th:errors="*{endTime}" class="error"></span>
+        <div class="form-group">
+          <label th:for="locations">Location</label>
+          <select th:field="*{locations}" class="form-control">
+            <option th:each="location : *{locations}" th:text="${location.name}" th:value="${location.locationId}">
+              Location Name
+            </option>
+          </select>
+        </div>
+        <span th:errors="*{locations}" class="error"></span>
+        <div class="form-group">
+          <label th:for="activities">Activities</label>
+          <select th:field="*{activities}" type="text" class="form-control" multiple="true">
+            <option th:each="activity : *{activities}" th:text="${activity.name}" th:value="${activity.activityId}">
+              Activity Name
+            </option>
+          </select>
+        </div>
+        <span th:errors="*{activities}" class="error"></span>
+        <div class="form-group">
+          <label th:for="minParticipants">Minimum Participants</label>
+          <input type="number" class="form-control" name="minParticipants" id="minParticipants"/>
+        </div>
+        <span th:text="${minParticipantsError}" class="error"></span>
+        <div class="form-group">
+          <label th:for="maxParticipants">Maximum Participants</label>
+          <input type="number" class="form-control" name="maxParticipants" id="maxParticipants"/>
+        </div>
+        <span th:text="${maxParticipantsError}" class="error"></span>
+        <input type="submit" class="btn btn-info" value="Update Event" />
+      </form>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+</div>
 </body>
 </html>
 
