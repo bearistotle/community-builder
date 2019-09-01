@@ -171,4 +171,36 @@ public class EventController {
         return "redirect:";
     }
 
+    @RequestMapping(value = "/remove", method = RequestMethod.GET)
+    public String confirmRemoval(Model model,
+                         HttpSession session,
+                         @RequestParam("eventId") int eventId){
+
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
+
+        Event event = eventDao.findOne(eventId);
+        model.addAttribute("title", "Remove Event");
+        model.addAttribute("eventName", event.getName());
+        model.addAttribute("eventId", eventId);
+        return "events/remove";
+    }
+
+    @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    public String remove(Model model,
+                         HttpSession session,
+                         @RequestParam("eventId") int eventId){
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
+
+        User user = userDao.findByEmail((String) session.getAttribute("user"));
+        Event event = eventDao.findOne(eventId);
+        user.removeEvent(event);
+        eventDao.delete(eventId);
+
+        return "redirect:";
+    }
+
 }
