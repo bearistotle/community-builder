@@ -16,6 +16,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -111,6 +112,26 @@ public class AvailabilityController {
             activity.addAvailability(newAvailability);
         }
         return "redirect:";
+    }
+
+    @RequestMapping(value = "edit", method = RequestMethod.GET)
+    public String edit(Model model,
+                       HttpSession session,
+                       @RequestParam("availabilityId") int availabilityId){
+
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
+
+        Availability availability = availabilityDao.findOne(availabilityId);
+        List<Activity> activities = (List<Activity>) activityDao.findAll();
+        List<Location> locations = (List<Location>) locationDao.findAll();
+        AddAvailabilityForm form = new AddAvailabilityForm(availability, activities, locations);
+        model.addAttribute("form", form);
+        model.addAttribute("availabilityId", availabilityId);
+        model.addAttribute("title", "Edit Availability");
+
+        return "availabilities/edit";
     }
 
 }
