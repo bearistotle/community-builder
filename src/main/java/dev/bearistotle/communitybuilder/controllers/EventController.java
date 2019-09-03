@@ -35,13 +35,6 @@ public class EventController {
     @Autowired
     private LocationDao locationDao;
 
-    /** TODO: Figure out how to use @InitBinder to fix typeMismatch error
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(LocalDate.class, "date", new CustomDateEditor(new SimpleDateFormat("yyyy-MM-dd"), true));
-    }
-    */
-
     @RequestMapping(value="")
     public String index(Model model, HttpSession session){
         if (session.getAttribute("user") == null){

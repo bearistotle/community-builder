@@ -81,11 +81,11 @@ public class Availability {
         return availabilityId;
     }
 
-    public List<Activity> getActivity() {
+    public List<Activity> getActivities() {
         return activities;
     }
 
-    public void setActivity(List<Activity> activities) {
+    public void setActivities(List<Activity> activities) {
         this.activities = activities;
     }
 

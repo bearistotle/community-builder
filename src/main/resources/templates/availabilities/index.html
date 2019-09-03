@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <nav th:replace="fragments :: nav"></nav>
+      <br />
+      <h1 th:text="${title}">You Forgot to Pass In a Title Dummy!</h1>
+      <br />
+      <table class="table table-hover table-striped" th:unless="${#lists.isEmpty(availabilities)}">
+        <thead>
+        <th>Name</th>
+        <th>Activities</th>
+        <th>Date</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        </thead>
+        <tbody>
+        <tr th:each="availability : ${availabilities}" >
+          <td th:text="${availability.name}"></td>
+          <td th:text="${availability.activities}"></td>
+          <td th:text="${availability.date}"></td>
+          <td th:text="${availability.startTime}"></td>
+          <td th:text="${availability.endTime}"></td>
+          <td>
+            <div class="btn btn-group">
+              <a class="btn btn-info" th:href="@{/activities/edit(activityId=${activity.activityId})}">Edit</a>
+              <a class="btn btn-danger" th:href="@{/activities/remove(activityId=${activity.activityId})}">Delete</a>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <p th:if="${#lists.isEmpty(availabilities)}">
+        I don't think you get how this thing works...
+        set an availability window to start matching with other users with shared interests!
+      </p>
+      <br />
+      <a class="btn btn-info" th:href="@{/availabilities/add}">Add Availability</a>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+</div>
+<div th:replace="fragments :: bs-scripts"></div>
+</body>
+</html>
+

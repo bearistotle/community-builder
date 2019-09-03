@@ -152,12 +152,15 @@ public class ActivityController {
         if (session.getAttribute("user") == null){
             return "redirect:/user/login";
         }
+
         User user = userDao.findByEmail((String) session.getAttribute("user"));
         Activity activity = activityDao.findOne(activityId);
         List<Event> events = activity.getEvents();
+
         for (Event event: events){
             event.removeActivity(activity);
         }
+
         user.removeActivity(activity);
         activityDao.delete(activity);
 
