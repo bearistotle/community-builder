@@ -12,23 +12,23 @@
       <br />
       <table class="table table-hover table-striped" th:unless="${#lists.isEmpty(availabilities)}">
         <thead>
-        <th>Name</th>
         <th>Activities</th>
         <th>Date</th>
         <th>Start Time</th>
         <th>End Time</th>
+        <th>Location</th>
         </thead>
         <tbody>
         <tr th:each="availability : ${availabilities}" >
-          <td th:text="${availability.name}"></td>
           <td th:text="${availability.activities}"></td>
           <td th:text="${availability.date}"></td>
           <td th:text="${availability.startTime}"></td>
           <td th:text="${availability.endTime}"></td>
+          <td th:text="${availability.location}"></td>
           <td>
             <div class="btn btn-group">
-              <a class="btn btn-info" th:href="@{/activities/edit(activityId=${activity.activityId})}">Edit</a>
-              <a class="btn btn-danger" th:href="@{/activities/remove(activityId=${activity.activityId})}">Delete</a>
+              <a class="btn btn-info" th:href="@{/availabilities/edit(availabilityId=${availability.availabilityId})}">Edit</a>
+              <a class="btn btn-danger" th:href="@{/availabilities/remove(availabilityId=${availability.availabilityId})}">Delete</a>
             </div>
           </td>
         </tr>

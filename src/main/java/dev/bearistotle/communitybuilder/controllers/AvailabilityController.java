@@ -12,10 +12,15 @@ import dev.bearistotle.communitybuilder.models.forms.AddAvailabilityForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +66,51 @@ public class AvailabilityController {
         model.addAttribute("title", "Add Availability");
 
         return "availabilities/add";
+    }
+
+    @RequestMapping(value = "add", method = RequestMethod.POST)
+    public String add(Model model,
+                      HttpSession session,
+                      @Valid @ModelAttribute("form") AddAvailabilityForm form,
+                      Errors errors){
+
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
+
+        if (errors.hasErrors()){
+
+            List<Activity> activities = (List<Activity>) activityDao.findAll();
+            List<Location> locations = (List<Location>) locationDao.findAll();
+
+            form.setActivities(activities);
+            form.setLocations(locations);
+            model.addAttribute("title", "Add Availability");
+            model.addAttribute("form", form);
+
+            return "availabilities/add";
+        }
+
+        User user = userDao.findByEmail((String) session.getAttribute("user"));
+        ArrayList<Activity> activities = (ArrayList<Activity>) form.getActivities();
+        LocalDate date = LocalDate.parse(form.getDate());
+        LocalTime startTime = LocalTime.parse(form.getStartTime());
+        LocalTime endTime = LocalTime.parse(form.getEndTime());
+        String recurrencePattern = form.getRecurrencePattern();
+        Location location = form.getLocations().get(0);
+        Availability newAvailability = new Availability(activities,
+                                                        user,
+                                                        date,
+                                                        startTime,
+                                                        endTime,
+                                                        recurrencePattern,
+                                                        location);
+        availabilityDao.save(newAvailability);
+        user.addAvailability(newAvailability);
+        for (Activity activity: newAvailability.getActivities()){
+            activity.addAvailability(newAvailability);
+        }
+        return "redirect:";
     }
 
 }

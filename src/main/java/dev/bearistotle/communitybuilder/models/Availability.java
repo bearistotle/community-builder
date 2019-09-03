@@ -77,7 +77,7 @@ public class Availability {
         this.activities = new ArrayList<>();
     }
 
-    public int getAvailibiliyId() {
+    public int getAvailabilityId() {
         return availabilityId;
     }
 
