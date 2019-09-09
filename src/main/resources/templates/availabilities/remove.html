@@ -10,16 +10,18 @@
       <br />
       <h1 th:text="${title}">You Forgot to Pass In a Title, Dummy!</h1>
       <br />
-      <p th:text="'The following event will be removed: ' + ${eventName}"></p>
+      <p th:text="'The following availability will be removed: ' + ${availability.activities} + ' at ' +
+        ${availability.startTime} + ' to ' + ${availability.endTime} + ' starting on ' + ${availability.date}"></p>
       <form action="" method="post">
-        <input type="hidden" th:value="${eventId}" name="eventId" />
+        <input type="hidden" th:value="${availabilityId}" name="availabilityId" />
         <input type="submit" value="Confirm" />
       </form>
-      <a class="btn btn-danger" th:href="@{/events}">Cancel</a>
+      <a class="btn btn-danger" th:href="@{/availabilities}">Cancel</a>
     </div>
     <div class="col-sm-2"></div>
   </div>
 </div>
 </body>
 </html>
+
 

@@ -134,4 +134,68 @@ public class AvailabilityController {
         return "availabilities/edit";
     }
 
+    @RequestMapping(value = "edit", method = RequestMethod.POST)
+    public String edit(Model model,
+                       HttpSession session,
+                       @Valid AddAvailabilityForm form,
+                       Errors errors,
+                       @RequestParam("availabilityId") int availabilityId){
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
+
+        if (errors.hasErrors()){
+            model.addAttribute("title", "Edit Availability");
+            model.addAttribute("form", form);
+
+            return "availabilities/edit";
+        }
+
+        Availability storedAvailability = availabilityDao.findOne(availabilityId);
+        storedAvailability.setDate(LocalDate.parse(form.getDate()));
+        storedAvailability.setRecurrencePattern(form.getRecurrencePattern());
+        storedAvailability.setStartTime(LocalTime.parse(form.getStartTime()));
+        storedAvailability.setEndTime(LocalTime.parse(form.getEndTime()));
+        storedAvailability.setActivities(form.getActivities());
+        List<Location> locations = form.getLocations();
+        Location location = locations.get(0);
+        storedAvailability.setLocation(location);
+
+        availabilityDao.save(storedAvailability);
+
+        return "redirect:";
+    }
+
+    @RequestMapping(value = "remove", method = RequestMethod.GET)
+    public String confirmRemoval(Model model,
+                                 HttpSession session,
+                                 @RequestParam("availabilityId") int availabilityId){
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
+
+        Availability availability = availabilityDao.findOne(availabilityId);
+        model.addAttribute("availability", availability);
+
+        return "availabilities/remove";
+    }
+
+    @RequestMapping(value = "remove", method = RequestMethod.POST)
+    public String remove(Model model,
+                         HttpSession session,
+                         @RequestParam("availabilityId") int availabilityId){
+        if (session.getAttribute("user") == null){
+            return "redirect:/user/login";
+        }
+
+        User user = userDao.findByEmail((String) session.getAttribute("user"));
+        Availability availability = availabilityDao.findOne(availabilityId);
+        user.removeAvailability(availability);
+        for (Activity activity: availability.getActivities()){
+            activity.removeAvailability(availability);
+        }
+        availabilityDao.delete(availabilityId);
+
+        return "redirect:";
+    }
 }

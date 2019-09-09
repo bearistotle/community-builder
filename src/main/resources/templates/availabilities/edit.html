@@ -41,6 +41,10 @@
           </select>
         </div>
         <span th:error="*recurrencePattern" class="error"></span>
+        <!-- TODO: Figure out how to have the user's previous choice in these select fields selected by default. Likely
+               a conditional branch within the th:each loop that adds an asterisk or something to the front of the
+               option tag if the activity/location name are on a list that is put into the model before this form is
+               rendered would do the trick. -->
         <div class="form-group">
           <label th:for="activities">Activities</label>
           <select th:field="*{activities}" type="text" class="form-control" multiple="true">
