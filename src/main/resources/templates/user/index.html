@@ -13,13 +13,36 @@
       <br />
       <h3 th:text="'Welcome, ' + ${user.getUsername()}"></h3>
       <br />
-      <blockquote class="blockquote">
-        <p class="mb-0">For without friends no one would choose to live, though he had all other goods . . .</p>
-        <footer class="blockquote-footer">Aristotle, Book VIII of <cite title="Source Title">Nicomachean Ethics</cite></footer>
-      </blockquote>
-      <div class="container">
-        <a class="btn btn-info" th:href="@{/user/add}">Add User</a>
-      </div>
+
+      <!-- Create table. Headers will be days of the week, starting with Sunday. Will have to calculate when the 1st is
+       and the number of the final day of the month. For each day, loop through events and availabilities and create a
+       list element for any events and availabilities scheduled for that day. Have a row for each hour and display at
+       the starting hour in the day the event/availability is scheduled. Or maybe have the events and availabilities
+       sorted into their days and times in the controller and pass in each day as an object itself... -->
+      <table class="table-hover calendar">
+        <thead>
+          <th>Time</th>
+          <th>Sunday</th>
+          <th>Monday</th>
+          <th>Tuesday</th>
+          <th>Wednesday</th>
+          <th>Thursday</th>
+          <th>Friday</th>
+          <th>Saturday</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>AM</td>
+            <td th:each="item: ${sundayItems}"></td>
+            <!-- TODO: Create parent object that events and availabilities inherit from, so lists of both can be formed
+                   and passed into populate days -->
+          </tr>
+          <tr>
+            <td>PM</td>
+          </tr>
+
+        </tbody>
+      </table>
     </div>
 
 
