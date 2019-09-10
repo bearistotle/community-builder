@@ -20,10 +20,10 @@ public class AddEventForm {
     private String description;
 
     @NotNull
-    private String date;
+    private List<Activity> activities;
 
     @NotNull
-    private String recurrencePattern;
+    private String date;
 
     @NotNull
     private String startTime;
@@ -32,10 +32,10 @@ public class AddEventForm {
     private String endTime;
 
     @NotNull
-    private List<Location> locations;
+    private String recurrencePattern;
 
     @NotNull
-    private List<Activity> activities;
+    private List<Location> locations;
 
     private int minParticipants;
 
@@ -49,12 +49,12 @@ public class AddEventForm {
     public AddEventForm(Event event, List<Location> locations){
         this.name = event.getName();
         this.description = event.getDescription();
+        this.activities = event.getActivities();
         this.date = event.getDate().toString();
-        this.recurrencePattern = event.getRecurrencePattern();
         this.startTime = event.getStartTime().toString();
         this.endTime = event.getEndTime().toString();
+        this.recurrencePattern = event.getRecurrencePattern();
         this.locations = locations;
-        this.activities = event.getActivities();
         this.minParticipants = event.getMinParticipants();
         this.maxParticipants = event.getMaxParticipants();
     }
@@ -77,20 +77,20 @@ public class AddEventForm {
         this.description = description;
     }
 
+    public List<Activity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(List<Activity> activities) {
+        this.activities = activities;
+    }
+
     public String getDate() {
         return date;
     }
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public String getRecurrencePattern() {
-        return recurrencePattern;
-    }
-
-    public void setRecurrencePattern(String recurrencePattern) {
-        this.recurrencePattern = recurrencePattern;
     }
 
     public String getStartTime() {
@@ -109,20 +109,20 @@ public class AddEventForm {
         this.endTime = endTime;
     }
 
+    public String getRecurrencePattern() {
+        return recurrencePattern;
+    }
+
+    public void setRecurrencePattern(String recurrencePattern) {
+        this.recurrencePattern = recurrencePattern;
+    }
+
     public List<Location> getLocations() {
         return locations;
     }
 
     public void setLocations(List<Location> locations) {
         this.locations = locations;
-    }
-
-    public List<Activity> getActivities() {
-        return activities;
-    }
-
-    public void setActivities(List<Activity> activities) {
-        this.activities = activities;
     }
 
     public int getMinParticipants() {

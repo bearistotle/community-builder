@@ -2,12 +2,22 @@ package dev.bearistotle.communitybuilder.models.forms;
 
 import dev.bearistotle.communitybuilder.models.Activity;
 import dev.bearistotle.communitybuilder.models.Availability;
-import dev.bearistotle.communitybuilder.models.Location;
-
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 public class AddAvailabilityForm {
+
+    @NotNull
+    @Size(min = 3, max = 200, message = "Name must be 3--200 characters.")
+    private String name;
+
+    @NotNull
+    @Size(min = 10, max = 500, message = "Description must be 10--500 characters.")
+    private String description;
+
+    @NotNull
+    private List<Activity> activities;
 
     @NotNull
     private String date;
@@ -21,25 +31,36 @@ public class AddAvailabilityForm {
     @NotNull
     private String recurrencePattern;
 
-    @NotNull
-    private List<Activity> activities;
-
-    private List<Location> locations;
-
-    public AddAvailabilityForm(Availability availability, List<Activity> activities, List<Location> locations){
+    public AddAvailabilityForm(Availability availability, List<Activity> activities){
+        this.name = availability.getName();
+        this.description = availability.getDescription();
+        this.activities = activities;
         this.date = availability.getDate().toString();
         this.startTime = availability.getStartTime().toString();
         this.endTime = availability.getEndTime().toString();
         this.recurrencePattern = availability.getRecurrencePattern();
-        this.activities = activities;
-        this.locations = locations;
     }
 
-    public AddAvailabilityForm(List<Activity> activities, List<Location> locations){
+    public AddAvailabilityForm(List<Activity> activities){
         this.activities = activities;
-        this.locations = locations;
     }
     public AddAvailabilityForm(){}
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public String getDate() {
         return date;
@@ -79,13 +100,5 @@ public class AddAvailabilityForm {
 
     public void setRecurrencePattern(String recurrencePattern) {
         this.recurrencePattern = recurrencePattern;
-    }
-
-    public List<Location> getLocations() {
-        return locations;
-    }
-
-    public void setLocations(List<Location> locations) {
-        this.locations = locations;
     }
 }

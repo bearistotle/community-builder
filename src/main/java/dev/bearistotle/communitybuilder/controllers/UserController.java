@@ -51,12 +51,12 @@ public class UserController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String add(Model model,
-                      @ModelAttribute("newUser") User newUser,
+                      @Valid @ModelAttribute("newUser") User newUser,
                       Errors errors,
                       @RequestParam String password,
                       @RequestParam String verify,
                       HttpSession session) throws Exception {
-        // validation
+        // TODO: Fix issue with validation. Errors not displaying.
         if (errors.hasErrors()){
             model.addAttribute("title", "Add User");
             model.addAttribute("user", newUser);
@@ -125,13 +125,13 @@ public class UserController {
                 existsByEmail = true;
             }
         }
-        if (existsByUsername == true){
+        if (existsByUsername){
             model.addAttribute("title", "Add User");
             model.addAttribute("user", newUser);
             model.addAttribute("usernameError","That username is taken. Please choose another.");
             return "user/add";
         }
-        if (existsByEmail == true){
+        if (existsByEmail){
             model.addAttribute("title", "Add User");
             model.addAttribute("user", newUser);
             model.addAttribute("emailError","That email is taken. Please choose another.");

@@ -6,17 +6,13 @@ import dev.bearistotle.communitybuilder.models.data.LocationDao;
 import dev.bearistotle.communitybuilder.models.data.UserDao;
 import dev.bearistotle.communitybuilder.models.forms.AddEventForm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -92,12 +88,13 @@ public class EventController {
 
         Event newEvent = new Event(form.getName(),
                 form.getDescription(),
+                user,
+                activities,
                 date,
-                form.getRecurrencePattern(),
                 startTime,
                 endTime,
+                form.getRecurrencePattern(),
                 location,
-                activities,
                 form.getMinParticipants(),
                 form.getMaxParticipants());
 

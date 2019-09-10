@@ -2,11 +2,9 @@ package dev.bearistotle.communitybuilder.controllers;
 
 import dev.bearistotle.communitybuilder.models.Activity;
 import dev.bearistotle.communitybuilder.models.Availability;
-import dev.bearistotle.communitybuilder.models.Location;
 import dev.bearistotle.communitybuilder.models.User;
 import dev.bearistotle.communitybuilder.models.data.ActivityDao;
 import dev.bearistotle.communitybuilder.models.data.AvailabilityDao;
-import dev.bearistotle.communitybuilder.models.data.LocationDao;
 import dev.bearistotle.communitybuilder.models.data.UserDao;
 import dev.bearistotle.communitybuilder.models.forms.AddAvailabilityForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +28,11 @@ import java.util.List;
 public class AvailabilityController {
 
     @Autowired
-    AvailabilityDao availabilityDao;
+    private AvailabilityDao availabilityDao;
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
     @Autowired
-    LocationDao locationDao;
-    @Autowired
-    ActivityDao activityDao;
+    private ActivityDao activityDao;
 
     @RequestMapping(value = "")
     public String index(Model model, HttpSession session){
@@ -60,8 +56,7 @@ public class AvailabilityController {
         }
 
         List<Activity> activities = (List<Activity>) activityDao.findAll();
-        List<Location> locations = (List<Location>) locationDao.findAll();
-        AddAvailabilityForm form = new AddAvailabilityForm(activities, locations);
+        AddAvailabilityForm form = new AddAvailabilityForm(activities);
 
         model.addAttribute("form", form);
         model.addAttribute("title", "Add Availability");
@@ -82,10 +77,8 @@ public class AvailabilityController {
         if (errors.hasErrors()){
 
             List<Activity> activities = (List<Activity>) activityDao.findAll();
-            List<Location> locations = (List<Location>) locationDao.findAll();
 
             form.setActivities(activities);
-            form.setLocations(locations);
             model.addAttribute("title", "Add Availability");
             model.addAttribute("form", form);
 
@@ -93,19 +86,21 @@ public class AvailabilityController {
         }
 
         User user = userDao.findByEmail((String) session.getAttribute("user"));
+        String name = form.getName();
+        String description = form.getDescription();
         ArrayList<Activity> activities = (ArrayList<Activity>) form.getActivities();
         LocalDate date = LocalDate.parse(form.getDate());
         LocalTime startTime = LocalTime.parse(form.getStartTime());
         LocalTime endTime = LocalTime.parse(form.getEndTime());
         String recurrencePattern = form.getRecurrencePattern();
-        Location location = form.getLocations().get(0);
-        Availability newAvailability = new Availability(activities,
+        Availability newAvailability = new Availability(name,
+                                                        description,
+                                                        activities,
                                                         user,
                                                         date,
                                                         startTime,
                                                         endTime,
-                                                        recurrencePattern,
-                                                        location);
+                                                        recurrencePattern);
         availabilityDao.save(newAvailability);
         user.addAvailability(newAvailability);
         for (Activity activity: newAvailability.getActivities()){
@@ -125,8 +120,7 @@ public class AvailabilityController {
 
         Availability availability = availabilityDao.findOne(availabilityId);
         List<Activity> activities = (List<Activity>) activityDao.findAll();
-        List<Location> locations = (List<Location>) locationDao.findAll();
-        AddAvailabilityForm form = new AddAvailabilityForm(availability, activities, locations);
+        AddAvailabilityForm form = new AddAvailabilityForm(availability, activities);
         model.addAttribute("form", form);
         model.addAttribute("availabilityId", availabilityId);
         model.addAttribute("title", "Edit Availability");
@@ -157,9 +151,6 @@ public class AvailabilityController {
         storedAvailability.setStartTime(LocalTime.parse(form.getStartTime()));
         storedAvailability.setEndTime(LocalTime.parse(form.getEndTime()));
         storedAvailability.setActivities(form.getActivities());
-        List<Location> locations = form.getLocations();
-        Location location = locations.get(0);
-        storedAvailability.setLocation(location);
 
         availabilityDao.save(storedAvailability);
 
