@@ -31,16 +31,14 @@
           <th>Saturday</th>
         </thead>
         <tbody>
-          <tr>
-            <td>AM</td>
-            <td th:each="item: ${sundayItems}"></td>
-            <!-- TODO: Create parent object that events and availabilities inherit from, so lists of both can be formed
-                   and passed into populate days -->
+          <tr th:each="hour: ${hours}">
+            <td th:text="${hour}"></td>
+            <td th:each="item: ${sundayItems.get(hour)}">
+              <ul>
+                <li th:text="${item.name}"></li>
+              </ul>
+            </td>
           </tr>
-          <tr>
-            <td>PM</td>
-          </tr>
-
         </tbody>
       </table>
     </div>

@@ -16,7 +16,6 @@
         <th>Date</th>
         <th>Start Time</th>
         <th>End Time</th>
-        <th>Location</th>
         </thead>
         <tbody>
         <tr th:each="availability : ${availabilities}" >
@@ -24,11 +23,10 @@
           <td th:text="${availability.date}"></td>
           <td th:text="${availability.startTime}"></td>
           <td th:text="${availability.endTime}"></td>
-          <td th:text="${availability.location}"></td>
           <td>
             <div class="btn btn-group">
-              <a class="btn btn-info" th:href="@{/availabilities/edit(availabilityId=${availability.availabilityId})}">Edit</a>
-              <a class="btn btn-danger" th:href="@{/availabilities/remove(availabilityId=${availability.availabilityId})}">Delete</a>
+              <a class="btn btn-info" th:href="@{/availabilities/edit(availabilityId=${availability.id})}">Edit</a>
+              <a class="btn btn-danger" th:href="@{/availabilities/remove(availabilityId=${availability.id})}">Delete</a>
             </div>
           </td>
         </tr>
