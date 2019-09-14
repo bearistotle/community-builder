@@ -1,9 +1,7 @@
 package dev.bearistotle.communitybuilder.controllers;
 
 import dev.bearistotle.communitybuilder.models.*;
-import dev.bearistotle.communitybuilder.models.data.EventDao;
-import dev.bearistotle.communitybuilder.models.data.LocationDao;
-import dev.bearistotle.communitybuilder.models.data.UserDao;
+import dev.bearistotle.communitybuilder.models.data.*;
 import dev.bearistotle.communitybuilder.models.forms.AddEventForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +18,11 @@ import java.util.List;
 
 //TODO: Read https://vladmihalcea.com/the-best-way-to-use-the-manytomany-annotation-with-jpa-and-hibernate/ and figure
 //      out why you should use Set not List for @ManyToMany JPA associations. Refactor accordingly.
+
+// TODO: Figure out why activities won't get saved to events. It has something to do with the fact that the many to many
+//    connection is set up through the availability object. Tried to save events with availability dao instead of event,
+//    but no change. Consider creating parent object that both availability and event inherit from, then setting up the
+//    many to many relations etc on the availability and event objects. Or on the parent?
 @Controller
 @RequestMapping(value="events")
 public class EventController {
@@ -27,9 +30,13 @@ public class EventController {
     @Autowired
     private EventDao eventDao;
     @Autowired
+    private AvailabilityDao availabilityDao;
+    @Autowired
     private UserDao userDao;
     @Autowired
     private LocationDao locationDao;
+    @Autowired
+    private ActivityDao activityDao;
 
     @RequestMapping(value="")
     public String index(Model model, HttpSession session){
@@ -115,7 +122,8 @@ public class EventController {
 
         Event event = eventDao.findOne(eventId);
         List<Location> locations = (List<Location>) locationDao.findAll();
-        AddEventForm form = new AddEventForm(event, locations);
+        List<Activity> activities = (List<Activity>) activityDao.findAll();
+        AddEventForm form = new AddEventForm(event, locations, activities);
         model.addAttribute("form", form);
         model.addAttribute("eventId", eventId);
         model.addAttribute("title", "Edit Event: " + event.getName());

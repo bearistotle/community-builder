@@ -27,8 +27,8 @@
             <td th:text="${event.location}"></td>
             <td>
               <div class="btn btn-group">
-                <a class="btn btn-info" th:href="@{/events/edit(eventId=${event.eventId})}">Edit</a>
-                <a class="btn btn-danger" th:href="@{/events/remove(eventId=${event.eventId})}">Delete</a>
+                <a class="btn btn-info" th:href="@{/events/edit(eventId=${event.id})}">Edit</a>
+                <a class="btn btn-danger" th:href="@{/events/remove(eventId=${event.id})}">Delete</a>
               </div>
             </td>
           </tr>

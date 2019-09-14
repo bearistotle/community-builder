@@ -1,6 +1,7 @@
 package dev.bearistotle.communitybuilder.controllers;
 
 import dev.bearistotle.communitybuilder.models.Availability;
+import dev.bearistotle.communitybuilder.models.CalendarItem;
 import dev.bearistotle.communitybuilder.models.HashUtils;
 import dev.bearistotle.communitybuilder.models.User;
 import dev.bearistotle.communitybuilder.models.data.UserDao;
@@ -18,10 +19,7 @@ import java.lang.Character;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -39,21 +37,33 @@ public class UserController {
         if (session.getAttribute("user") == null){
             return "redirect:/user/login";
         }
-        // get user from session
+
         User user = userDao.findByEmail((String) session.getAttribute("user"));
-        // TODO: Get and pass in items for each day of the calendar, with each day having a list for each hour. Also,
-        //   pass in 24 as "hours"
+
+        // TODO: Decide whether to create field in user class for calendarItems (this would require refactoring the
+        //  addEvent and addAvailability methods so that they also add the item to the calendarItems list as well.
+
+        // TODO: Figure out how to tell the view which calendarItems are events and which are availabilities, while also
+        //   telling it where each goes. Perhaps order them in a single calendarItems list and then somehow take the
+        //   info from this list and pass that in, with a list of events and a list of availabilities. Still need a way
+        //   to weave both into the same element in the view. Maybe get the next item from the calendarItem list, find
+        //   the item by id in event or availability list, display one way if event, another if availability...
+        // Create list of all Availabilities and Events
+        ArrayList<CalendarItem> calendarItems = new ArrayList<>();
+        calendarItems.addAll(user.getAvailabilities());
+        calendarItems.addAll(user.getEvents());
+
         // List of HashMaps with hour as key and list of Availabilities during that hour as value for each day
-        HashMap<Integer,ArrayList<Availability>> monItems = new HashMap<>();
-        HashMap<Integer,ArrayList<Availability>> tuesItems = new HashMap<>();
-        HashMap<Integer,ArrayList<Availability>> wedItems = new HashMap<>();
-        HashMap<Integer,ArrayList<Availability>> thursItems = new HashMap<>();
-        HashMap<Integer,ArrayList<Availability>> friItems = new HashMap<>();
-        HashMap<Integer,ArrayList<Availability>> satItems = new HashMap<>();
-        HashMap<Integer,ArrayList<Availability>> sunItems = new HashMap<>();
+        HashMap<Integer,ArrayList<CalendarItem>> monItems = new HashMap<>();
+        HashMap<Integer,ArrayList<CalendarItem>> tuesItems = new HashMap<>();
+        HashMap<Integer,ArrayList<CalendarItem>> wedItems = new HashMap<>();
+        HashMap<Integer,ArrayList<CalendarItem>> thursItems = new HashMap<>();
+        HashMap<Integer,ArrayList<CalendarItem>> friItems = new HashMap<>();
+        HashMap<Integer,ArrayList<CalendarItem>> satItems = new HashMap<>();
+        HashMap<Integer,ArrayList<CalendarItem>> sunItems = new HashMap<>();
 
 
-        ArrayList<HashMap<Integer,ArrayList<Availability>>> dayMaps = new ArrayList<>();
+        ArrayList<HashMap<Integer,ArrayList<CalendarItem>>> dayMaps = new ArrayList<>();
         dayMaps.add(monItems);
         dayMaps.add(tuesItems);
         dayMaps.add(wedItems);
@@ -62,28 +72,28 @@ public class UserController {
         dayMaps.add(satItems);
         dayMaps.add(sunItems);
 
-        for (HashMap<Integer,ArrayList<Availability>> dayMap: dayMaps) {
+        for (HashMap<Integer,ArrayList<CalendarItem>> dayMap: dayMaps) {
 
             // Create a map entry for each hour of the day
             for (int i = 1; i < 25; i++) {
-                ArrayList<Availability> emptyList = new ArrayList<>();
+                ArrayList<CalendarItem> emptyList = new ArrayList<>();
                 dayMap.put(i, emptyList);
 
             }
         }
 
         for (DayOfWeek day: DayOfWeek.values()) {
-            HashMap<Integer,ArrayList<Availability>> dayMap = dayMaps.get(day.getValue() - 1);
+            HashMap<Integer,ArrayList<CalendarItem>> dayMap = dayMaps.get(day.getValue() - 1);
 
-            for (Availability availability : user.getAvailabilities()) {
-                if (availability.getDate()
+            for (CalendarItem calendarItem : calendarItems) {
+                if (calendarItem.getDate()
                         .getDayOfWeek()
                         .getDisplayName(TextStyle.FULL, Locale.getDefault())
                         .equals(day.getDisplayName(TextStyle.FULL, Locale.getDefault()))){
                     // Add Availability to ArrayList that corresponds to the hour of its startTime in the HashMap for
                     // the day.
-                    ArrayList<Availability> hourList = dayMap.get(availability.getStartTime().getHour());
-                    hourList.add(availability);
+                    ArrayList<CalendarItem> hourList = dayMap.get(calendarItem.getStartTime().getHour());
+                    hourList.add(calendarItem);
                 }
             }
         }

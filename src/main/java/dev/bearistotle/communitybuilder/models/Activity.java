@@ -30,20 +30,10 @@ public class Activity {
     @ManyToMany(mappedBy = "activities", cascade = { CascadeType.PERSIST,CascadeType.MERGE }, fetch = FetchType.LAZY)
     private List<User> users;
 
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "activity_event",
-            joinColumns = { @JoinColumn(name = "activity_id") },
-            inverseJoinColumns = { @JoinColumn(name = "event_id") }
-    )
+    @ManyToMany(mappedBy = "activities", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
     private List<Event> events;
 
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "activity_availability",
-            joinColumns = { @JoinColumn(name = "activity_id") },
-            inverseJoinColumns = { @JoinColumn(name = "availability_id") }
-    )
+    @ManyToMany(mappedBy = "activities", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
     private List<Availability> availabilities;
 
     public Activity(String name,

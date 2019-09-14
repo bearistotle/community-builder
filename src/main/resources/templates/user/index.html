@@ -35,7 +35,8 @@
             <td th:text="${hour}"></td>
             <td th:each="item: ${sundayItems.get(hour)}">
               <ul>
-                <li th:text="${item.name}"></li>
+                <li th:if="${item.getItemType() == 'availability'}" th:text="'Availability: ' + ${item.name}" class="availability"></li>
+                <li th:if="${item.getItemType() == 'event'}" th:text="'Event: ' + ${item.name}" class="event"></li>
               </ul>
             </td>
           </tr>

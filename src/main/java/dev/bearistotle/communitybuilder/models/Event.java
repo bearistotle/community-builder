@@ -30,9 +30,24 @@ import java.util.Objects;
  *
  */
 @Entity
+@DiscriminatorValue("event")
 @Transactional
-@Table(name = "Event")
-public class Event extends Availability {
+public class Event extends CalendarItem {
+
+
+    @NotNull
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "event_activity",
+            joinColumns = { @JoinColumn(name = "event_id") },
+            inverseJoinColumns = { @JoinColumn(name = "activity_id") }
+    )
+    private List<Activity> activities;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    private User creator;
 
     @ManyToOne
     private Location location;
@@ -58,12 +73,12 @@ public class Event extends Availability {
                  ArrayList<User> participants) {
         super(name,
                 description,
-                activities,
-                creator,
                 date,
                 startTime,
                 endTime,
                 recurrencePattern);
+        this.creator = creator;
+        this.activities = activities;
         this.location = location;
         this.minParticipants = minParticipants;
         this.maxParticipants = maxParticipants;
@@ -83,12 +98,12 @@ public class Event extends Availability {
                  int maxParticipants) {
         super(name,
                 description,
-                activities,
-                creator,
                 date,
                 startTime,
                 endTime,
                 recurrencePattern);
+        this.creator = creator;
+        this.activities = activities;
         this.location = location;
         this.minParticipants = minParticipants;
         this.maxParticipants = maxParticipants;
@@ -106,12 +121,12 @@ public class Event extends Availability {
                  Location location) {
         super(name,
                 description,
-                activities,
-                creator,
                 date,
                 startTime,
                 endTime,
                 recurrencePattern);
+        this.creator = creator;
+        this.activities = activities;
         this.location = location;
         this.minParticipants = 0;
         this.maxParticipants = 0;
@@ -122,6 +137,28 @@ public class Event extends Availability {
         this.participants = new ArrayList<>();
     }
 
+    public String getItemType(){
+        return "event";
+    }
+    public List<Activity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(List<Activity> activities) {
+        this.activities = activities;
+    }
+
+    public void removeActivity(Activity activity){ this.activities.remove(activity); }
+
+    public void addActivity(Activity activity){ this.activities.add(activity); }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
 
     public List<User> getParticipants() {
         return participants;
@@ -179,7 +216,7 @@ public class Event extends Availability {
     @Override
     public String toString() {
         return "Event{" +
-                "id=" + this.getId() +
+                "eventId=" + this.getId() +
                 ", name='" + this.getName() + '\'' +
                 ", description='" + this.getDescription() + '\'' +
                 ", date=" + this.getDate() +

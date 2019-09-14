@@ -95,8 +95,8 @@ public class AvailabilityController {
         String recurrencePattern = form.getRecurrencePattern();
         Availability newAvailability = new Availability(name,
                                                         description,
-                                                        activities,
                                                         user,
+                                                        activities,
                                                         date,
                                                         startTime,
                                                         endTime,

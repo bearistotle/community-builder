@@ -11,26 +11,17 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@DiscriminatorValue("availability")
 @Transactional
-@Table(name = "Availability")
-public class Availability {
+public class Availability extends CalendarItem {
 
     @NotNull
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private int id;
-
-    @NotNull
-    @Size(min = 3, max = 200, message = "Name must be 3--200 characters.")
-    private String name;
-
-    @NotNull
-    @Size(min = 10, max = 500, message = "Description must be 10--500 characters.")
-    private String description;
-
-    @NotNull
-    @ManyToMany(mappedBy = "availabilities", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "availability_activity",
+            joinColumns = { @JoinColumn(name = "availability_id") },
+            inverseJoinColumns = { @JoinColumn(name = "activity_id") }
+    )
     private List<Activity> activities;
 
     @NotNull
@@ -38,56 +29,30 @@ public class Availability {
     @JoinColumn(name = "creator_id")
     private User creator;
 
-    private LocalDate date;
-
-    @NotNull
-    private LocalTime startTime;
-
-    @NotNull
-    private LocalTime endTime;
-
-    @NotNull
-    private String recurrencePattern;
-
     public Availability(String name,
                         String description,
-                        ArrayList<Activity> activities,
                         User creator,
+                        ArrayList<Activity> activities,
                         LocalDate date,
                         LocalTime startTime,
                         LocalTime endTime,
                         String recurrencePattern){
-        this.name = name;
-        this.description = description;
-        this.activities = activities;
+        super(name,
+                description,
+                date,
+                startTime,
+                endTime,
+                recurrencePattern);
         this.creator = creator;
-        this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.recurrencePattern = recurrencePattern;}
+        this.activities = activities;
+    }
 
     public Availability(){
         this.activities = new ArrayList<>();
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public String getItemType(){
+        return "availability";
     }
 
     public List<Activity> getActivities() {
@@ -110,60 +75,29 @@ public class Availability {
         this.creator = creator;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getRecurrencePattern() {
-        return recurrencePattern;
-    }
-
-    public void setRecurrencePattern(String recurrencePattern) {
-        this.recurrencePattern = recurrencePattern;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Availability)) return false;
         Availability that = (Availability) o;
-        return id == that.id;
+        return this.getId() == that.getId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(this.getId());
     }
 
     @Override
     public String toString() {
         return "Availability{" +
-                "id= " + id +
+                "availabilityId= " + this.getId() +
                 "activities= " + activities +
                 ", creator= " + creator +
-                ", date= " + date +
-                ", startTime= " + startTime +
-                ", endTime= " + endTime +
-                ", recurrencePattern= " + recurrencePattern + '\'' + '}';
+                ", date= " + this.getDate() +
+                ", startTime= " + this.getStartTime() +
+                ", endTime= " + this.getEndTime() +
+                ", recurrencePattern= " + this.getRecurrencePattern() + '\'' + '}';
     }
 }

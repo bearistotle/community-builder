@@ -46,10 +46,10 @@ public class AddEventForm {
         this.activities = activities;
     }
 
-    public AddEventForm(Event event, List<Location> locations){
+    public AddEventForm(Event event, List<Location> locations, List<Activity> activities){
         this.name = event.getName();
         this.description = event.getDescription();
-        this.activities = event.getActivities();
+        this.activities = activities;
         this.date = event.getDate().toString();
         this.startTime = event.getStartTime().toString();
         this.endTime = event.getEndTime().toString();
