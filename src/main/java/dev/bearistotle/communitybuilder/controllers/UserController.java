@@ -38,7 +38,21 @@ public class UserController {
             return "redirect:/user/login";
         }
 
+        // TODO: 1) Get calendarItems with dates falling in the current week; 2) Get calendarItems that recur weekly;
+        //   3) Get calendarItems that recur monthly; 4) Get calendarItems that recur yearly.
         User user = userDao.findByEmail((String) session.getAttribute("user"));
+        ArrayList<LocalDate> datesThisWeek = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        LocalDate monday = today;
+
+        while (monday.getDayOfWeek() != DayOfWeek.MONDAY){
+            monday = monday.minusDays(1);
+        }
+
+        for (int i = 0; i < 7; i++){
+            LocalDate date = monday.plusDays(i);
+            datesThisWeek.add(date);
+        }
 
         // Create list of all Availabilities and Events
         ArrayList<CalendarItem> calendarItems = new ArrayList<>();
@@ -74,18 +88,26 @@ public class UserController {
             }
         }
 
-        for (DayOfWeek day: DayOfWeek.values()) {
-            HashMap<Integer,ArrayList<CalendarItem>> dayMap = dayMaps.get(day.getValue() - 1);
+
+        for (int i = 1; i < 8; i++) {
+            HashMap<Integer,ArrayList<CalendarItem>> dayMap = dayMaps.get(i-1);
+            LocalDate date = datesThisWeek.get(i-1);
 
             for (CalendarItem calendarItem : calendarItems) {
-                if (calendarItem.getDate()
-                        .getDayOfWeek()
-                        .getDisplayName(TextStyle.FULL, Locale.getDefault())
-                        .equals(day.getDisplayName(TextStyle.FULL, Locale.getDefault()))){
+
+                if (calendarItem.getDate().equals(date)){
                     // Add Availability to ArrayList that corresponds to the hour of its startTime in the HashMap for
                     // the day.
                     ArrayList<CalendarItem> hourList = dayMap.get(calendarItem.getStartTime().getHour());
                     hourList.add(calendarItem);
+                } else if (calendarItem.getDate().getDayOfWeek().getValue() == i && calendarItem.getRecurrencePattern().equals("weekly")){
+                    ArrayList<CalendarItem> hourList = dayMap.get(calendarItem.getStartTime().getHour());
+                    hourList.add(calendarItem);
+                } else if (calendarItem.getDate().getDayOfWeek().getValue() == i &&
+                        calendarItem.getRecurrencePattern().equals("monthly")){
+
+                    // Add monthly recurring items. Unsure as yet how to get them all. Maybe just do it by date, not d
+                    // day of week. (So the 1st of every month or the 27th of every month, etc.)
                 }
             }
         }
