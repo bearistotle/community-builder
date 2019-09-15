@@ -40,14 +40,6 @@ public class UserController {
 
         User user = userDao.findByEmail((String) session.getAttribute("user"));
 
-        // TODO: Decide whether to create field in user class for calendarItems (this would require refactoring the
-        //  addEvent and addAvailability methods so that they also add the item to the calendarItems list as well.
-
-        // TODO: Figure out how to tell the view which calendarItems are events and which are availabilities, while also
-        //   telling it where each goes. Perhaps order them in a single calendarItems list and then somehow take the
-        //   info from this list and pass that in, with a list of events and a list of availabilities. Still need a way
-        //   to weave both into the same element in the view. Maybe get the next item from the calendarItem list, find
-        //   the item by id in event or availability list, display one way if event, another if availability...
         // Create list of all Availabilities and Events
         ArrayList<CalendarItem> calendarItems = new ArrayList<>();
         calendarItems.addAll(user.getAvailabilities());
@@ -103,7 +95,7 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("title", "Users");
         model.addAttribute("hours", hours);
-        model.addAttribute("sundayItems", sunItems);
+        model.addAttribute("dayMaps", dayMaps);
 
         return "user/index";
     }

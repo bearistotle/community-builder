@@ -22,22 +22,26 @@
       <table class="table-hover calendar">
         <thead>
           <th>Time</th>
-          <th>Sunday</th>
           <th>Monday</th>
           <th>Tuesday</th>
           <th>Wednesday</th>
           <th>Thursday</th>
           <th>Friday</th>
           <th>Saturday</th>
+          <th>Sunday</th>
         </thead>
         <tbody>
           <tr th:each="hour: ${hours}">
             <td th:text="${hour}"></td>
-            <td th:each="item: ${sundayItems.get(hour)}">
-              <ul>
+            <td th:each="dayMap: ${dayMaps}" >
+              <ul th:each="item: ${dayMap.get(hour)}">
                 <li th:if="${item.getItemType() == 'availability'}" th:text="'Availability: ' + ${item.name}" class="availability"></li>
                 <li th:if="${item.getItemType() == 'event'}" th:text="'Event: ' + ${item.name}" class="event"></li>
               </ul>
+              <!-- TODO: Get something to display in the hours that do not have calendarItems to create proper calendar
+                    structure. Perhaps using #lists.Empty or whatever. -->
+              <p th:if="${#lists.isEmpty(dayMap.get(hour))}" th:text="Empty"></p>
+              <p th:if="${#lists.isEmpty(dayMap.get(hour))}" th:text="Empty"></p>
             </td>
           </tr>
         </tbody>
