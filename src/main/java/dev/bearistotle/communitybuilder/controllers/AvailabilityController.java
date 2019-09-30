@@ -106,6 +106,7 @@ public class AvailabilityController {
         for (Activity activity: newAvailability.getActivities()){
             activity.addAvailability(newAvailability);
         }
+        newAvailability.classify();
         return "redirect:";
     }
 

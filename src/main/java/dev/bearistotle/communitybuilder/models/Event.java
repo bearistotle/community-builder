@@ -137,9 +137,14 @@ public class Event extends CalendarItem {
         this.participants = new ArrayList<>();
     }
 
+    public void classify(){}
+
+    public void calculateMatchLevels(){}
+
     public String getItemType(){
         return "event";
     }
+
     public List<Activity> getActivities() {
         return activities;
     }
