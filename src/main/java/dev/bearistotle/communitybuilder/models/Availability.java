@@ -106,27 +106,16 @@ public class Availability extends CalendarItem {
             HashMap<String, HashMap<String, Double>> classifierResult = new HashMap<>();
             HashMap<String, Double> classification = new HashMap<>();
 
-            // TODO: Move this list elsewhere (json file maybe or ENUM in a class)
-            ArrayList<String> classNames = new ArrayList<>();
-            classNames.add("Arts");
-            classNames.add("Business");
-            classNames.add("Computers");
-            classNames.add("Games");
-            classNames.add("Health");
-            classNames.add("Home");
-            classNames.add("Recreation");
-            classNames.add("Science");
-            classNames.add("Society");
-            classNames.add("Sports");
             String classifier = "Topics";
 
-            for (String className : classNames) {
-                for (int i = 0; i < responseArray.length(); i++) {
-                    Object result = responseArray.get(i);
-                    System.out.println(result.toString());
-                }
+            for (int i = 0; i < responseArray.length(); i++) {
+                JSONObject result = (JSONObject) responseArray.get(i);
+                classification.put((String) result.get("className"), (Double) result.get("p"));
             }
-            //this.setClassification(classification);
+            classifierResult.put(classifier, classification);
+            // TODO: Fix data truncation issue. Look into @MapKeyClass JPA annotation
+            System.out.println(classifierResult.toString());
+            this.setClassification(classifierResult);
 
             System.out.println("Body: " + response.getBody());
             System.out.println("Status Code: " + response.getStatus());
@@ -134,9 +123,6 @@ public class Availability extends CalendarItem {
         } catch (UnirestException | IOException e){
             e.printStackTrace();
         }
-
-
-
     }
 
     // TODO: See if there is a library that does for Java what scikit does for Python. May be useful here.

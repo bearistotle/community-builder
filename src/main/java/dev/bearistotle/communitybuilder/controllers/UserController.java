@@ -56,8 +56,10 @@ public class UserController {
 
         // Create list of all Availabilities and Events
         ArrayList<CalendarItem> calendarItems = new ArrayList<>();
-        calendarItems.addAll(user.getAvailabilities());
-        calendarItems.addAll(user.getEvents());
+        if (user.getAvailabilities() != null && user.getEvents() != null){
+            calendarItems.addAll(user.getAvailabilities());
+            calendarItems.addAll(user.getEvents());
+        }
 
         // List of HashMaps with hour as key and list of Availabilities during that hour as value for each day
         HashMap<Integer,ArrayList<CalendarItem>> monItems = new HashMap<>();
