@@ -159,6 +159,7 @@ public class Availability extends CalendarItem {
                 HashMap<String, HashMap<String, Double>> classification1 = this.getClassification();
                 HashMap<String, HashMap<String, Double>> classification2 = a.getClassification();
                 HashMap<String, Double> matchFactors = new HashMap<>();
+                Double sum = 0.0;
 
                 for (String classifier: classification1.keySet()){
                     Double matchFactor = 0.0;
@@ -167,9 +168,15 @@ public class Availability extends CalendarItem {
                         Double class2Prob = classification2.get(classifier).get(category);
                         matchFactor += ((class1Prob + class2Prob) / 2) * (1- Math.abs(class1Prob - class2Prob));
                     }
+                    // In case I want to weight the Topics classifier more heavily
                     matchFactors.put(classifier, matchFactor);
                 }
+                for (Double matchFactor: matchFactors.values()){
+                    sum += matchFactor;
+                }
 
+                HashMap<Integer, Double> matchLevel = new HashMap<>();
+                this.addMatchLevel(a.getId(), (sum / matchFactors.size()));
             }
         }
     }
