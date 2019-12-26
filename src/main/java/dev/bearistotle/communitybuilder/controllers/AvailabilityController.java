@@ -152,6 +152,7 @@ public class AvailabilityController {
         storedAvailability.setStartTime(LocalTime.parse(form.getStartTime()));
         storedAvailability.setEndTime(LocalTime.parse(form.getEndTime()));
         storedAvailability.setActivities(form.getActivities());
+        storedAvailability.classify();
 
         availabilityDao.save(storedAvailability);
 

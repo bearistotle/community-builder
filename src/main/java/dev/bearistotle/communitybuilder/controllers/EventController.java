@@ -19,10 +19,6 @@ import java.util.List;
 //TODO: Read https://vladmihalcea.com/the-best-way-to-use-the-manytomany-annotation-with-jpa-and-hibernate/ and figure
 //      out why you should use Set not List for @ManyToMany JPA associations. Refactor accordingly.
 
-// TODO: Figure out why activities won't get saved to events. It has something to do with the fact that the many to many
-//    connection is set up through the availability object. Tried to save events with availability dao instead of event,
-//    but no change. Consider creating parent object that both availability and event inherit from, then setting up the
-//    many to many relations etc on the availability and event objects. Or on the parent?
 @Controller
 @RequestMapping(value="events")
 public class EventController {
