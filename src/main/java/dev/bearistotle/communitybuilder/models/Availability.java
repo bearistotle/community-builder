@@ -110,10 +110,8 @@ public class Availability extends CalendarItem {
             JSONObject textsJson = new JSONObject();
             textsJson.accumulate("texts", textsArray);
 
-            // TODO: Consult uClassify docs to figure out how to batch requests. On the last request I hit a "too many
-            //   simultaneous requests" error from the API.
+            // TODO: Consult uClassify docs to figure out how to batch requests (unless current delay is best practice?)
 
-            
             for (String classifierName : classifierNames) {
 
                 HttpResponse<JsonNode> response = Unirest.post(baseURL + API_USERNAME + "/" + classifierName + "/classify")
@@ -121,9 +119,6 @@ public class Availability extends CalendarItem {
                         .header("authorization", "Token " + API_KEY)
                         .body(textsJson)
                         .asJson();
-
-                // TODO: Delete print statements when no longer needed
-                System.out.println(response.getBody().toString());
 
                 JSONArray responseArray = response.getBody()
                         .getArray()
@@ -136,11 +131,15 @@ public class Availability extends CalendarItem {
                 }
 
                 classifierResult.put(classifierName, classification);
-                System.out.println("Body: " + response.getBody());
-                System.out.println("Status Code: " + response.getStatus());
+
+                // Slight delay to avoid too-many-requests error from uClassify API
+                try{
+                    Thread.sleep(100);
+                } catch (InterruptedException e){
+                    e.printStackTrace();
+                }
             }
 
-            System.out.println("Classifier Result: " + classifierResult.toString());
             this.setClassification(classifierResult);
 
         } catch(UnirestException | IOException e){

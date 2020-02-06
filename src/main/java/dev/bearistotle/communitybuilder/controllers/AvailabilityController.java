@@ -42,6 +42,9 @@ public class AvailabilityController {
         }
 
         User user = userDao.findByEmail((String) session.getAttribute("user"));
+
+        ArrayList<Availability> userAvailabilities = (ArrayList<Availability>) user.getAvailabilities();
+
         model.addAttribute("availabilities", user.getAvailabilities());
         model.addAttribute("title", "Availabilities: " + user.getUsername());
 
