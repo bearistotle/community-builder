@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -43,9 +44,23 @@ public class AvailabilityController {
 
         User user = userDao.findByEmail((String) session.getAttribute("user"));
 
-        ArrayList<Availability> userAvailabilities = (ArrayList<Availability>) user.getAvailabilities();
-
-        model.addAttribute("availabilities", user.getAvailabilities());
+        List<HashMap<String, String>> userAvList = new ArrayList<HashMap<String, String>>();
+        for (Availability a: user.getAvailabilities()){
+            HashMap<String, String> userAvMap = new HashMap<>();
+            userAvMap.put("availabilityId", String.valueOf(a.getId()));
+            String activitiesStr = "";
+            for (Activity activity: a.getActivities()){
+                activitiesStr += activity.toString();
+            }
+            userAvMap.put("activities", activitiesStr);
+            userAvMap.put("date", a.getDate().toString());
+            userAvMap.put("startTime", a.getStartTime().toString());
+            userAvMap.put("endTime", a.getEndTime().toString());
+            userAvList.add(userAvMap);
+            System.out.println("Map Variable: " + userAvMap);
+        }
+        System.out.println("List: " + userAvList);
+        model.addAttribute("availabilities", userAvList);
         model.addAttribute("title", "Availabilities: " + user.getUsername());
 
         return "availabilities/index";
