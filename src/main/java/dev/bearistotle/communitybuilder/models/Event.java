@@ -34,7 +34,10 @@ import java.util.Objects;
 @Transactional
 public class Event extends CalendarItem {
 
-
+    /*
+    @Column(name = "item_type")
+    private String itemType;
+    */
     @NotNull
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(

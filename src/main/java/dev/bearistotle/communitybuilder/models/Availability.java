@@ -24,11 +24,18 @@ import java.util.*;
 @Transactional
 public class Availability extends CalendarItem {
 
+    @Transient
     @Autowired
     private EventDao eventDao;
 
+    @Transient
     @Autowired
     private AvailabilityDao availabilityDao;
+
+    /*
+    @Column(name = "item_type")
+    private String itemType;
+    */
 
     @NotNull
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
@@ -105,6 +112,8 @@ public class Availability extends CalendarItem {
 
             // TODO: Consult uClassify docs to figure out how to batch requests. On the last request I hit a "too many
             //   simultaneous requests" error from the API.
+
+            
             for (String classifierName : classifierNames) {
 
                 HttpResponse<JsonNode> response = Unirest.post(baseURL + API_USERNAME + "/" + classifierName + "/classify")

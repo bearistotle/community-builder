@@ -1,0 +1,50 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.21.RELEASE'
+
+    }
+}
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'idea'
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.session:spring-session-bom:Bean-SR2'
+    }
+}
+
+group = 'dev.bearistotle'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    //compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'mysql:mysql-connector-java'
+    compile 'org.springframework.session:spring-session-core'
+    compile 'org.springframework.session:spring-session-jdbc'
+    compile 'com.konghq:unirest-java:2.3.17'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    //testCompile 'org.springframework.security:spring-security-test'
+}
